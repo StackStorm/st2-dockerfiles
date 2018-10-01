@@ -1,0 +1,15 @@
+# Mac files
+*.DS_Store
+
+# Vagrant files
+.vagrant
+
+# Log files
+*.log
+
+# Tarball files
+*.tar
+*.tgz
+
+# Lock files
+*.lock
