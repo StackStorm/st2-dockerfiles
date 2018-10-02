@@ -1,5 +1,5 @@
 ARG ST2_VERSION
-FROM stackstorm/st2base:${ST2_VERSION}
+FROM stackstorm/st2:${ST2_VERSION}
 LABEL com.stackstorm.component="st2sensorcontainer"
 
 USER st2

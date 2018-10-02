@@ -1,13 +1,14 @@
 FROM ubuntu:xenial
 
 ARG ST2_VERSION
+RUN : "${ST2_VERSION:?Docker build argument needs to be set and non-empty.}"
 
 LABEL maintainer="StackStorm <info@stackstorm.com>"
 LABEL com.stackstorm.vendor="StackStorm"
 LABEL com.stackstorm.support="Community"
 LABEL com.stackstorm.version="${ST2_VERSION}"
-LABEL com.stackstorm.name="StackStorm Community K8s HA"
-LABEL com.stackstorm.description="Docker image, optimized to run StackStorm Community \
+LABEL com.stackstorm.name="StackStorm K8s HA"
+LABEL com.stackstorm.description="Docker image, optimized to run StackStorm \
 components and core services with Highly Available requirements in Kubernetes environment"
 LABEL com.stackstorm.url="https://stackstorm.com/#product"
 
@@ -23,20 +24,19 @@ ENV TERM xterm
 # The LC_ALL variable must be defined after executing update-local
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
-RUN : "${ST2_VERSION:?Docker build argument needs to be set and non-empty.}"
 
 # The following LANG variables must not be specified prior to executing
 # update-local otherwise it falls back to the standard locale ("C").
 
-# Install StackStorm Community, but without UI
+# Install StackStorm, but without UI
 RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
-    ST2_COMMUNITY_REPO=unstable; \
+    ST2_REPO=unstable; \
   else \
-    ST2_COMMUNITY_REPO=stable; \
+    ST2_REPO=stable; \
   fi \
-  && echo ST2_COMMUNITY_REPO=${ST2_COMMUNITY_REPO} \
+  && echo ST2_REPO=${ST2_REPO} \
   && apt-get install -y curl \
-  && curl -sf https://packagecloud.io/install/repositories/StackStorm/${ST2_COMMUNITY_REPO}/script.deb.sh | bash \
+  && curl -sf https://packagecloud.io/install/repositories/StackStorm/${ST2_REPO}/script.deb.sh | bash \
   && apt-get install -y st2=${ST2_VERSION}-*
 
 # Add custom st2 empty config file, used to override original st2.conf
@@ -53,7 +53,7 @@ RUN cd /etc/st2; \
   done
 COPY files/logging.docker.conf /etc/st2/
 
-# Hardcode some st2.conf values needed for Docker and Community
+# Hardcode some st2.conf values needed for Docker
 COPY files/st2.tmp.conf /tmp/
 RUN apt-get install -y crudini \
   && crudini --merge /etc/st2/st2.conf < /tmp/st2.tmp.conf \
@@ -61,7 +61,7 @@ RUN apt-get install -y crudini \
   && apt-get purge -y crudini \
   && apt-get autoremove -y
 
-# Add Custom "StackStorm Community" welcome message
+# Add Custom "StackStorm" welcome message
 COPY files/.welcome.sh /etc/skel/.welcome
 RUN install -m755 -ost2 -gst2 -d /home/st2
 RUN echo '. /etc/skel/.welcome' >> /etc/skel/.profile

@@ -6,8 +6,8 @@ LABEL maintainer="StackStorm <info@stackstorm.com>"
 LABEL com.stackstorm.vendor="StackStorm"
 LABEL com.stackstorm.support="Community"
 LABEL com.stackstorm.version="${ST2_VERSION}"
-LABEL com.stackstorm.name="StackStorm Community K8s HA"
-LABEL com.stackstorm.description="Docker image, optimized to run StackStorm Community \
+LABEL com.stackstorm.name="StackStorm K8s HA"
+LABEL com.stackstorm.description="Docker image, optimized to run StackStorm \
 components and core services with Highly Available requirements in Kubernetes environment"
 LABEL com.stackstorm.url="https://stackstorm.com/#product"
 
@@ -36,7 +36,7 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys ABF5BD827B
   && apt-get install -y nginx \
   && rm -f /etc/apt/sources.list.d/nginx.list
 
-# Install StackStorm Community Web UI
+# Install StackStorm Web UI
 RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
     ST2_REPO=unstable; \
   else \
