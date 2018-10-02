@@ -22,7 +22,6 @@ workflows:
   version: 2
   k8s:
     jobs:
-      - helm-lint
       - docker-build
 
 experimental:

@@ -12,18 +12,18 @@ LABEL com.stackstorm.description="Docker image, optimized to run StackStorm \
 components and core services with Highly Available requirements in Kubernetes environment"
 LABEL com.stackstorm.url="https://stackstorm.com/#product"
 
+ENV container docker
+ENV ENV /etc/skel/.profile
+ENV TERM xterm
+
 # Generate and set locale to UTF-8
 RUN apt-get -qq update \
   && apt-get install -y locales \
   && locale-gen en_US.UTF-8 \
   && update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 
-ENV container docker
-ENV ENV /etc/skel/.profile
-ENV TERM xterm
 # The LC_ALL variable must be defined after executing update-local
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
-
 
 # The following LANG variables must not be specified prior to executing
 # update-local otherwise it falls back to the standard locale ("C").

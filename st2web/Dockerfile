@@ -1,6 +1,7 @@
 FROM ubuntu:xenial
 
 ARG ST2_VERSION
+RUN : "${ST2_VERSION:?Docker build argument needs to be set and non-empty.}"
 
 LABEL maintainer="StackStorm <info@stackstorm.com>"
 LABEL com.stackstorm.vendor="StackStorm"
@@ -18,8 +19,6 @@ ENV TERM xterm
 ENV ST2_AUTH_URL http://st2auth:9100/
 ENV ST2_API_URL http://st2api:9101/
 ENV ST2_STREAM_URL http://st2stream:9102/
-
-RUN : "${ST2_VERSION:?Docker build argument needs to be set and non-empty.}"
 
 # Generate UTF-8 locale
 RUN apt-get -qq update \
