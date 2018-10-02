@@ -1,5 +1,6 @@
 # st2-dockerfiles
 [![Circle CI](https://circleci.com/gh/StackStorm/st2-dockerfiles.svg?style=shield)](https://circleci.com/gh/StackStorm/workflows/st2-dockerfiles)
+[![Docker Hub](https://img.shields.io/docker/build/stackstorm/st2-dockerfiles.svg)](https://hub.docker.com/r/stackstorm/)
 
 Dockerfiles to build, test and push to private [docker.stackstorm.com](https://docker.stackstorm.com) StackStorm images,
 compatible with K8s Helm chart [stackstorm-ha](https://github.com/StackStorm/stackstorm-ha)
