@@ -25,9 +25,6 @@ RUN apt-get -qq update \
 # The LC_ALL variable must be defined after executing update-local
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
-# The following LANG variables must not be specified prior to executing
-# update-local otherwise it falls back to the standard locale ("C").
-
 # Install StackStorm, but without UI
 RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
     ST2_REPO=unstable; \
