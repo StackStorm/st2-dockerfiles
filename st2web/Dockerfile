@@ -11,6 +11,7 @@ LABEL com.stackstorm.name="StackStorm K8s HA"
 LABEL com.stackstorm.description="Docker image, optimized to run StackStorm \
 components and core services with Highly Available requirements in Kubernetes environment"
 LABEL com.stackstorm.url="https://stackstorm.com/#product"
+LABEL com.stackstorm.component="st2web"
 
 ENV container docker
 ENV TERM xterm
