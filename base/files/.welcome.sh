@@ -6,8 +6,7 @@ printf "Welcome to \033[1;38;5;208mStackStorm HA\033[0m \033[1m%s\033[0m (Ubuntu
 printf " * Documentation: https://docs.stackstorm.com/\n"
 printf " * Community: https://stackstorm.com/community-signup\n"
 printf " * Forum: https://forum.stackstorm.com/\n"
-printf " * Enterprise: https://stackstorm.com/#product\n"
-printf "\n"
+printf " * \033[1;38;5;93mEnterprise: https://stackstorm.com/#product\033[0m\n\n"
 if [ -n "$ST2CLIENT" ]; then
   printf " Here you can use StackStorm CLI. Examples:\n"
   printf "   st2 action list --pack=core\n"
