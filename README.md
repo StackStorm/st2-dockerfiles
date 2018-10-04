@@ -1,2 +1,20 @@
-# st2community-dockerfiles
-StackStorm Community Dockerfiles to build and push images to the StackStorm registry, used in 'stackstorm-community-ha' K8s Helm chart
+# st2-dockerfiles
+[![Circle CI](https://circleci.com/gh/StackStorm/st2-dockerfiles.svg?style=shield)](https://circleci.com/gh/StackStorm/workflows/st2-dockerfiles)
+[![Docker Hub](https://img.shields.io/docker/build/stackstorm/st2-dockerfiles.svg)](https://hub.docker.com/r/stackstorm/)
+
+Dockerfiles to build and push StackStorm images to [hub.docker.com/r/stackstorm](https://hub.docker.com/r/stackstorm),
+compatible with K8s Helm chart [stackstorm-ha](https://github.com/StackStorm/stackstorm-ha)
+
+## Requirements
+* [Docker](https://docs.docker.com/install/)
+
+## Build
+- `make build` - produce Docker images for all the required StackStorm components
+  The following ENV vars can be passed to control the build settings:
+  - `ST2_VERSION` (optional, ex: `2.8.0`) - StackStorm version to build components
+  - `DOCKER_TAG` (optional, ex: `latest`) - produced Docker images will get this tag, defaults to ST2_VERSION when not set
+
+## Push
+- `make push` - push the Docker images for all the required StackStorm components to the private docker registry.
+  The following ENV vars can be passed to control the push:
+  - `DOCKER_TAG` (optional, ex: `2.8.0`) - tag pushed to the docker registry, defaults to ST2_VERSION when not set
