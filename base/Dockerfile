@@ -1,5 +1,7 @@
 FROM ubuntu:xenial
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 ARG ST2_VERSION
 RUN : "${ST2_VERSION:?Docker build argument needs to be set and non-empty.}"
 
@@ -18,7 +20,10 @@ ENV TERM xterm
 
 # Generate and set locale to UTF-8
 RUN apt-get -qq update \
-  && apt-get install -y locales \
+  && apt-get install -y \
+    curl \
+    locales \
+  && rm -rf /var/lib/apt/lists/* \
   && locale-gen en_US.UTF-8 \
   && update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 
@@ -32,9 +37,9 @@ RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
     ST2_REPO=stable; \
   fi \
   && echo ST2_REPO=${ST2_REPO} \
-  && apt-get install -y curl \
   && curl -sf https://packagecloud.io/install/repositories/StackStorm/${ST2_REPO}/script.deb.sh | bash \
-  && apt-get install -y st2=${ST2_VERSION}-*
+  && apt-get install -y st2=${ST2_VERSION}-* \
+  && rm -f /etc/apt/sources.list.d/StackStorm_*.list
 
 # Add custom st2 empty config file, used to override original st2.conf
 COPY files/st2.docker.conf /etc/st2/

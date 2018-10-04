@@ -1,5 +1,7 @@
 FROM ubuntu:xenial
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 ARG ST2_VERSION
 RUN : "${ST2_VERSION:?Docker build argument needs to be set and non-empty.}"
 
@@ -23,7 +25,10 @@ ENV ST2_STREAM_URL http://st2stream:9102/
 
 # Generate UTF-8 locale
 RUN apt-get -qq update \
-  && apt-get install -y locales \
+  && apt-get install -y \
+    curl \
+    locales \
+  && rm -rf /var/lib/apt/lists/* \
   && locale-gen en_US.UTF-8 \
   && update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 
@@ -43,7 +48,6 @@ RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
     ST2_REPO=stable; \
   fi \
   && echo ST2_REPO=${ST2_REPO} \
-  && apt-get install -y curl \
   && curl -s https://packagecloud.io/install/repositories/StackStorm/${ST2_REPO}/script.deb.sh | bash \
   && apt-get install -y st2web=${ST2_VERSION}-* \
   && rm -f /etc/apt/sources.list.d/StackStorm_*.list
