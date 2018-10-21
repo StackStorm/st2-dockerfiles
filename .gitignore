@@ -13,3 +13,6 @@
 
 # Lock files
 *.lock
+
+# jetBrains IDE
+.idea
