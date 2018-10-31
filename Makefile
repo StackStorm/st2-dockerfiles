@@ -6,6 +6,7 @@ SHELL := /bin/bash
 .PHONY: build
 build:
 	@docker build \
+		--pull \
 		--build-arg ST2_VERSION=${ST2_VERSION} \
 		-t stackstorm/st2:${DOCKER_TAG} base/
 	@echo -e "\033[32mSuccessfully built \033[1mstackstorm/st2:${DOCKER_TAG}\033[0m\033[32m common Docker image with StackStorm version \033[1m${ST2_VERSION}\033[0m"
