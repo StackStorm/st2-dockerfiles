@@ -1,7 +1,11 @@
+## Required ENV variables in CircleCI account:
+# DOCKER_USERNAME
+# DOCKER_PASSWORD
+
 version: 2
 jobs:
-  # Run Docker Build as a basic check to know if Dockerfiles don't produce any error
-  docker-build:
+  # Build and deploy docker images to docker hub
+  docker:
     working_directory: ~/docker
     docker:
       - image: docker:18-git
@@ -19,15 +23,38 @@ jobs:
       - run:
           name: Show produced Docker images
           command: docker images
+      - run:
+          name: Deploy image to Docker Hub
+          shell: /bin/bash -eo pipefail
+          command: |
+            if [[ "${CIRCLE_BRANCH}" == "master" ]] || [[ "${CIRCLE_BRANCH}" =~ ^v[0-9]+\.[0-9]+$ ]]; then
+              docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}
+              make push
+            else
+              echo "Skipping Docker push for '${CIRCLE_BRANCH}' branch..."
+            fi
 
 workflows:
   version: 2
-  build:
+  # Build and Push Docker images
+  docker-build-push:
     jobs:
-      - docker-build
+      - docker
+  # Build and Push nightly 'dev' Docker images from 'master' branch
+  nightly-dev-push:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - docker
 
 experimental:
   notify:
     branches:
       only:
         - master
+        - /v[0-9]+\.[0-9]+/
