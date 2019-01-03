@@ -1,4 +1,4 @@
-FROM ubuntu:xenial
+FROM ubuntu:bionic
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -23,6 +23,7 @@ RUN apt-get -qq update \
   && apt-get install -y \
     curl \
     locales \
+    gpg \
   && rm -rf /var/lib/apt/lists/* \
   && locale-gen en_US.UTF-8 \
   && update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
