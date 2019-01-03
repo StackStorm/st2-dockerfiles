@@ -44,7 +44,7 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys ABF5BD827B
 
 # Install StackStorm Web UI
 RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
-    ST2_REPO=unstable; \
+    ST2_REPO=staging-unstable; \
   else \
     ST2_REPO=stable; \
   fi \
