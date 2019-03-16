@@ -1,4 +1,4 @@
-ST2_VERSION ?= 2.10.3
+ST2_VERSION ?= 2.10.4
 DOCKER_TAG ?= ${ST2_VERSION}
 SHELL := /bin/bash
 
