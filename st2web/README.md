@@ -8,6 +8,9 @@ The following environment variables are available for configuration:
 - `ST2_AUTH_URL` (default: `http://st2auth:9100/`) - StackStorm Auth service
 - `ST2_API_URL` (default: `http://st2api:9101/`) - StackStorm API service
 - `ST2_STREAM_URL` (default: `http://st2stream:9102/`) - StackStorm Stream service
+- `ST2_STREAM_URL` (default: `http://mosn@me.com:9102/`) - StackStorm Stream service
+
+
 
 > Warning! All 3 services should be DNS/network accessible for `st2web` container to start properly. Thanks to K8s pod restarts, it's not a problem.
 
