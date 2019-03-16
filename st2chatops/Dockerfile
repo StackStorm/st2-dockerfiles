@@ -46,9 +46,9 @@ RUN apt-get -qq update \
 
 # Install st2chatops
 RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; conf \
-  ST2_BRANCH=master; \
+    ST2_BRANCH=master; \
   else \
-  ST2_BRANCH=v${ST2_VERSION%.*}; \
+    ST2_BRANCH=v${ST2_VERSION%.*}; \
   fi \
   && echo ST2_BRANCH=${ST2_BRANCH} \
   && apt-get install -y patch gettext-base \
