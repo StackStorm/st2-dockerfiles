@@ -1,5 +1,4 @@
-FROM ubuntu:xenial
-
+FROM ubuntu:trusty
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -24,36 +23,28 @@ ENV ST2_AUTH    http://st2auth:9100/
 ENV ST2_API_URL http://st2api:9101/
 ENV ST2_API_KEY XXXXXXXXXXXXXXXXXXX
 
-# Generate and set locale to UTF-8
+# Generate and set locale to UTF-8 
+# # Add NodeJS v10 repository:
 RUN apt-get -qq update \
   && apt-get install -y \
     curl \
     locales \
   && rm -rf /var/lib/apt/lists/* \
   && locale-gen en_US.UTF-8 \
-  && update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
+  && update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 \
+  && curl -sL https://deb.nodesource.com/setup_10.x |  bash -
 
 # The LC_ALL variable must be defined after executing update-local
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 
-# Add NodeJS v10 repository:
-RUN apt-get -qq update \
-  && apt-get install -y \
-    curl \
-    locales \
-  && curl -sL https://deb.nodesource.com/setup_10.x |  bash -
 
 # Install st2chatops
-RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; conf \
-    ST2_BRANCH=master; \
-  else \
-    ST2_BRANCH=v${ST2_VERSION%.*}; \
-  fi \
-  && echo ST2_BRANCH=${ST2_BRANCH} \
-  && apt-get install -y patch gettext-base \
-  && curl -sf https://raw.githubusercontent.com/StackStorm/st2chatops/master/st2chatops.env -o opt/stackstorm/chatops/st2chatops.env \
-  && patch /opt/stackstorm/chatops/st2chatops.env < /tmp/st2.chatops.patch \
+RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
+  ST2_BRANCH=master; \
+    else \
+  ST2_BRANCH=v${ST2_VERSION%.*}; \
+  && patch /opt/stackstorm/chatops/st2chatops.env < /tmp/st2.chatops.patch  \
   && rm -f /tmp/st2.conf.patch
 
 
@@ -73,8 +64,9 @@ RUN apt-get install -y crudini \
   && apt-get purge -y crudini \
   && apt-get autoremove -y
 
+ENV PATH="$HERE/node_modules/.bin:$HERE/node_modules/hubot/node_modules/.bin:$PATH"
 
-# It's a user's responsbility to pass the valid SSL certificate files: 'st2.key' and 'st2.crt', used in nginx
 VOLUME ["/etc/st2", "/opt/stackstorm/chatops"]
+CMD [ "/opt/stackstorm/chatops", "--config-file=/etc/st2/chatops.env" ]
 WORKDIR /opt/stackstorm/chatops
 EXPOSE 8080
