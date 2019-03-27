@@ -19,7 +19,7 @@ ENV ENV /etc/skel/.profile
 ENV TERM xterm
 
 # Default, but overrideable env vars to be substituted in st2.template chatops.conf
-ENV ST2_AUTH    http://st2auth:9100/
+ENV ST2_AUTH_URL    http://st2auth:9100/
 ENV ST2_API_URL http://st2api:9101/
 ENV ST2_API_KEY XXXXXXXXXXXXXXXXXXX
 
@@ -47,15 +47,6 @@ RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
   && patch /opt/stackstorm/chatops/st2chatops.env < /tmp/st2.chatops.patch  \
   && rm -f /tmp/st2.conf.patch
 
-
-# Use custom logging config that'll stream all st2 service logs to stdout and never save to files
-RUN cd /etc/st2; \
-  for file in /etc/st2/logging.*.conf; do \
-    rm -f ${file}; \
-    ln -s logging.docker.conf ${file}; \
-  done
-COPY files/logging.docker.conf /etc/st2/
-
 # Download st2chatops.env and apply patch
 COPY files/st2.st2chatops.env /tmp
 RUN apt-get install -y crudini \
@@ -66,7 +57,6 @@ RUN apt-get install -y crudini \
 
 ENV PATH="$HERE/node_modules/.bin:$HERE/node_modules/hubot/node_modules/.bin:$PATH"
 
-VOLUME ["/etc/st2", "/opt/stackstorm/chatops"]
-CMD [ "/opt/stackstorm/chatops", "--config-file=/etc/st2/chatops.env" ]
 WORKDIR /opt/stackstorm/chatops
+CMD ["bin/hubot"]
 EXPOSE 8080
