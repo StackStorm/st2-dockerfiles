@@ -40,22 +40,21 @@ RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
     ST2_REPO=unstable; \
   else \
     ST2_REPO=stable; \
-  fi \
+    fi \
   && echo ST2_REPO=${ST2_REPO} \
   && curl -s https://packagecloud.io/install/repositories/StackStorm/${ST2_REPO}/script.deb.sh | bash \
-  && apt-get install -y st2chatops=${ST2_VERSION}-* \
-  && rm -f /etc/apt/sources.list.d/StackStorm_*.list
-
+  && apt-get install -y st2chatops=${ST2_VERSION}-* 
 
 # Download st2chatops.env and apply patch
 COPY files/st2chatops.env /tmp
 RUN apt-get install -y crudini \
-  && crudini --merge /etc/init/st2chatops < /tmp/st2chatops.env \
+  && crudini --merge /opt/stackstorm/chatops/st2chatops.env < /tmp/st2chatops.env \
   && rm -f /tmp/st2chatops.env \
   && apt-get purge -y crudini \
   && apt-get autoremove -y  \
   && rm -f /etc/apt/sources.list.d/StackStorm_*.list
 
+VOLUME ["/opt/stackstorm/chatops"]
 WORKDIR /opt/stackstorm/chatops
 CMD ["bin/hubot"]
 EXPOSE 8080
