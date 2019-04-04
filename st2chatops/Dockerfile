@@ -20,7 +20,6 @@ ENV TERM xterm
 ENV ST2_AUTH_URL http://st2auth:9100/
 ENV ST2_API_URL http://st2api:9101/
 ENV ST2_STREAM_URL http://st2stream:9102/
-ENV ST2_API_KEY   XXXXXXXXXXXXXXXXXXX
 
 # Generate and set locale to UTF-8 
 # # Add NodeJS v10 repository:
