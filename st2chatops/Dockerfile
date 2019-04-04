@@ -47,6 +47,7 @@ RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
   && rm -f /etc/apt/sources.list.d/nodesource.list \
   && rm -f /etc/apt/sources.list.d/StackStorm_*.list
 
+USER st2
 WORKDIR /opt/stackstorm/chatops
 EXPOSE 8081
 CMD ["bin/hubot"]
