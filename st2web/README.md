@@ -1,4 +1,6 @@
-# Docker `st2web`
+# Docker st2web
+[![Go to stackstorm/st2web Docker Hub](https://img.shields.io/badge/Docker%20Hub-stackstorm/st2web-blue.svg)](https://hub.docker.com/r/stackstorm/st2web/)
+
 Containerized `st2web` app, the StackStorm Web UI.
 It's using `nginx` service under the hood, proxifying requests to StackStorm services (auth, api, stream).
 
