@@ -57,4 +57,4 @@ RUN apt-get install -y crudini \
 VOLUME ["/opt/stackstorm/chatops"]
 WORKDIR /opt/stackstorm/chatops
 CMD ["bin/hubot"]
-EXPOSE 8080
+EXPOSE 8081
