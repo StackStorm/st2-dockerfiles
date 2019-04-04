@@ -1,6 +1,7 @@
 FROM ubuntu:trusty
 
 ARG DEBIAN_FRONTEND=noninteractive
+
 ARG ST2_VERSION
 RUN : "${ST2_VERSION:?Docker build argument needs to be set and non-empty.}"
 
@@ -21,21 +22,19 @@ ENV ST2_AUTH_URL http://st2auth:9100/
 ENV ST2_API_URL http://st2api:9101/
 ENV ST2_STREAM_URL http://st2stream:9102/
 
-# Generate and set locale to UTF-8 
-# # Add NodeJS v10 repository:
+# Generate and set locale to UTF-8
 RUN apt-get -qq update \
   && apt-get install -y \
     curl \
     locales \
   && rm -rf /var/lib/apt/lists/* \
   && locale-gen en_US.UTF-8 \
-  && update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 \
-  && curl -sL https://deb.nodesource.com/setup_10.x | bash -
+  && update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 
 # The LC_ALL variable must be defined after executing update-local
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
-# Install StackStorm Web UI
+# Install st2chatops
 RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
     ST2_REPO=unstable; \
   else \
@@ -43,7 +42,10 @@ RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
     fi \
   && echo ST2_REPO=${ST2_REPO} \
   && curl -s https://packagecloud.io/install/repositories/StackStorm/${ST2_REPO}/script.deb.sh | bash \
-  && apt-get install -y st2chatops=${ST2_VERSION}-* 
+  && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
+  && apt-get install -y st2chatops=${ST2_VERSION}-* \
+  && rm -f /etc/apt/sources.list.d/StackStorm_*.list \
+  && rm -f /etc/apt/sources.list.d/nodesource.list
 
 # Download st2chatops.env and apply patch
 COPY files/st2chatops.env /tmp
@@ -51,10 +53,8 @@ RUN apt-get install -y crudini \
   && crudini --merge /opt/stackstorm/chatops/st2chatops.env < /tmp/st2chatops.env \
   && rm -f /tmp/st2chatops.env \
   && apt-get purge -y crudini \
-  && apt-get autoremove -y  \
-  && rm -f /etc/apt/sources.list.d/StackStorm_*.list
+  && apt-get autoremove -y
 
-VOLUME ["/opt/stackstorm/chatops"]
 WORKDIR /opt/stackstorm/chatops
-CMD ["bin/hubot"]
 EXPOSE 8081
+CMD ["bin/hubot"]
