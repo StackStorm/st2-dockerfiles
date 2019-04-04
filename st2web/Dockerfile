@@ -5,15 +5,15 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG ST2_VERSION
 RUN : "${ST2_VERSION:?Docker build argument needs to be set and non-empty.}"
 
-LABEL maintainer="StackStorm <info@stackstorm.com>" \
-      com.stackstorm.vendor="StackStorm"  \
-      com.stackstorm.support="Community"  \
-      com.stackstorm.version="${ST2_VERSION}" \
-      com.stackstorm.name="StackStorm K8s HA" \
-      com.stackstorm.description="Docker image, optimized to run StackStorm \
-components and core services with Highly Available requirements in Kubernetes environment"  \
-      com.stackstorm.url="https://stackstorm.com/#product"  \
-      com.stackstorm.component="st2web"
+LABEL maintainer="StackStorm <info@stackstorm.com>"
+LABEL com.stackstorm.vendor="StackStorm"
+LABEL com.stackstorm.support="Community"
+LABEL com.stackstorm.version="${ST2_VERSION}"
+LABEL com.stackstorm.name="StackStorm K8s HA"
+LABEL com.stackstorm.description="Docker image, optimized to run StackStorm \
+components and core services with Highly Available requirements in Kubernetes environment"
+LABEL com.stackstorm.url="https://stackstorm.com/#product"
+LABEL com.stackstorm.component="st2web"
 
 ENV container docker
 ENV TERM xterm
