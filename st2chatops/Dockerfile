@@ -17,7 +17,11 @@ LABEL com.stackstorm.component="st2chatops"
 ENV container docker
 ENV TERM xterm
 
-# Default, but overrideable env vars passed to st2chatops/hubot
+# Configure st2chatops by passing required ENV variables.
+# Full list of supported variables and chat adapters:
+# https://github.com/StackStorm/st2chatops/blob/master/st2chatops.env
+#
+# Default, but overrideable ST2 service endpoints passed to st2chatops/hubot
 ENV ST2_AUTH_URL http://st2auth:9100/
 ENV ST2_API_URL http://st2api:9101/
 ENV ST2_STREAM_URL http://st2stream:9102/
