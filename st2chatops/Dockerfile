@@ -44,16 +44,8 @@ RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
   && curl -s https://packagecloud.io/install/repositories/StackStorm/${ST2_REPO}/script.deb.sh | bash \
   && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
   && apt-get install -y st2chatops=${ST2_VERSION}-* \
-  && rm -f /etc/apt/sources.list.d/StackStorm_*.list \
-  && rm -f /etc/apt/sources.list.d/nodesource.list
-
-# Download st2chatops.env and apply patch
-COPY files/st2chatops.env /tmp
-RUN apt-get install -y crudini \
-  && crudini --merge /opt/stackstorm/chatops/st2chatops.env < /tmp/st2chatops.env \
-  && rm -f /tmp/st2chatops.env \
-  && apt-get purge -y crudini \
-  && apt-get autoremove -y
+  && rm -f /etc/apt/sources.list.d/nodesource.list \
+  && rm -f /etc/apt/sources.list.d/StackStorm_*.list
 
 WORKDIR /opt/stackstorm/chatops
 EXPOSE 8081
