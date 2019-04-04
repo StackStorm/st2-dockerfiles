@@ -39,7 +39,7 @@ RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
     ST2_REPO=unstable; \
   else \
     ST2_REPO=stable; \
-    fi \
+  fi \
   && echo ST2_REPO=${ST2_REPO} \
   && curl -s https://packagecloud.io/install/repositories/StackStorm/${ST2_REPO}/script.deb.sh | bash \
   && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
