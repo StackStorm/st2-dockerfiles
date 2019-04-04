@@ -23,7 +23,7 @@ build:
 
 .PHONY: push
 push:
-	docker push  docker push stackstorm/st2:${DOCKER_TAG};
+	docker push stackstorm/st2:${DOCKER_TAG};
 	@echo -e "\033[32mSuccessfully pushed \033[1mstackstorm/st2:${DOCKER_TAG}\033[0m\033[32m Docker image for StackStorm version \033[1m${ST2_VERSION}\033[0m";
 	@set -e; \
 	for component in st2*; do \
