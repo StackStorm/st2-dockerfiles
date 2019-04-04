@@ -16,9 +16,10 @@ LABEL maintainer="StackStorm <info@stackstorm.com>" \
 ENV container docker
 ENV TERM xterm
 
-# Default, but overrideable env vars to be substituted in st2.template chatops.conf
-ENV ST2_AUTH_URL  http://st2auth:9100/
-ENV ST2_API_URL   http://st2api:9101/
+# Default, but overrideable env vars passed to st2chatops/hubot
+ENV ST2_AUTH_URL http://st2auth:9100/
+ENV ST2_API_URL http://st2api:9101/
+ENV ST2_STREAM_URL http://st2stream:9102/
 ENV ST2_API_KEY   XXXXXXXXXXXXXXXXXXX
 
 # Generate and set locale to UTF-8 
