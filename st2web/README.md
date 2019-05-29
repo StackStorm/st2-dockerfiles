@@ -10,10 +10,13 @@ The following environment variables are available for configuration:
 - `ST2_AUTH_URL` (default: `http://st2auth:9100/`) - StackStorm Auth service
 - `ST2_API_URL` (default: `http://st2api:9101/`) - StackStorm API service
 - `ST2_STREAM_URL` (default: `http://st2stream:9102/`) - StackStorm Stream service
+- `ST2WEB_HTTPS` (default: `0`) - Use https with st2web
 
 > Warning! All 3 services should be DNS/network accessible for `st2web` container to start properly. Thanks to K8s pod restarts, it's not a problem.
 
 ### Secrets
+> Note! You may safely ignore this section if `ST2WEB_HTTPS` is set to `0`.
+
 StackStorm Web UI uses nginx for SSL negotiation. A valid SSL certificate is required for `st2web` to run properly.
 You have to share with the Docker container the following files:
 - `/etc/ssl/st2/st2.crt` (required) - SSL certificate, [`ssl_certificate`](http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_certificate) nginx directive
