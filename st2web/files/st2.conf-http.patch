@@ -47,7 +47,7 @@
 -  add_header              Front-End-Https on;
 -  add_header              X-Content-Type-Options nosniff;
 +  access_log /proc/self/fd/1 combined;
-+  error_log st2derr;
++  error_log stderr;
  
    location @apiError {
      add_header Content-Type application/json always;
