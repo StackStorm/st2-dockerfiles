@@ -78,4 +78,4 @@ VOLUME ["/etc/ssl/st2/"]
 EXPOSE 80
 EXPOSE 443
 STOPSIGNAL SIGTERM
-CMD ["/bin/bash", "-c", "if [ \"${ST2WEB_HTTPS:-0}\" = \"1\" ]; then ST2WEB_TEMPLATE = \"/etc/nginx/conf.d/st2-https.template\"; else ST2WEB_TEMPLATE = \"/etc/nginx/conf.d/st2-http.template\"; fi && envsubst '${ST2_AUTH_URL} ${ST2_API_URL} ${ST2_STREAM_URL}' < ${ST2WEB_TEMPLATE} > /etc/nginx/conf.d/st2.conf && exec nginx -g 'daemon off;'"]
+CMD ["/bin/bash", "-c", "if [ ${ST2WEB_HTTPS} = 1 ]; then ST2WEB_TEMPLATE='/etc/nginx/conf.d/st2-https.template'; else ST2WEB_TEMPLATE='/etc/nginx/conf.d/st2-http.template'; fi && envsubst '${ST2_AUTH_URL} ${ST2_API_URL} ${ST2_STREAM_URL}' < ${ST2WEB_TEMPLATE} > /etc/nginx/conf.d/st2.conf && exec nginx -g 'daemon off;'"]
