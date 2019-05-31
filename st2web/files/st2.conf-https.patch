@@ -1,5 +1,5 @@
---- /etc/nginx/conf.d/st2.template	2018-07-26 16:55:35.000000000 +0000
-+++ /etc/nginx/conf.d/st2.conf	2018-07-26 17:06:30.200000000 +0000
+--- /etc/nginx/conf.d/st2.template	2019-05-27 14:11:20.000000000 -0700
++++ /etc/nginx/conf.d/st2.conf	2019-05-27 14:22:11.000000000 -0700
 @@ -18,8 +18,8 @@
  
    index  index.html;
