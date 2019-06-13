@@ -2,6 +2,13 @@ ARG ST2_VERSION
 FROM stackstorm/st2:${ST2_VERSION}
 LABEL com.stackstorm.component="st2actionrunner"
 
+# Install utils used by st2 'linux' pack, part of StackStorm core
+RUN apt-get install -y rsync \
+  inetutils-traceroute \
+  net-tools \
+  dnsutils \
+  sudo
+
 USER root
 
 VOLUME ["/home/stanley/.ssh", "/opt/stackstorm/packs", "/opt/stackstorm/virtualenvs"]
