@@ -9,7 +9,7 @@
  # To enable:
  #    cp ${LOCATION}/st2.conf /etc/nginx/sites-available
  #    ln -l /etc/nginx/sites-available/st2.conf /etc/nginx/sites-enabled/st2.conf
-@@ -9,39 +9,12 @@
+@@ -9,37 +9,12 @@
  server {
    listen *:80 default_server;
  
@@ -28,8 +28,6 @@
 -
 -server {
 -  listen       *:443 ssl;
--
--  ssl on;
 -
 -  ssl_certificate           /etc/ssl/st2/st2.crt;
 -  ssl_certificate_key       /etc/ssl/st2/st2.key;
@@ -51,7 +49,7 @@
  
    location @apiError {
      add_header Content-Type application/json always;
-@@ -53,7 +26,7 @@
+@@ -51,7 +24,7 @@
  
      rewrite ^/api/(.*)  /$1 break;
  
@@ -60,7 +58,7 @@
      proxy_read_timeout    90;
      proxy_connect_timeout 90;
      proxy_redirect        off;
-@@ -83,7 +56,7 @@
+@@ -81,7 +54,7 @@
  
      rewrite ^/stream/(.*)  /$1 break;
  
@@ -69,7 +67,7 @@
      proxy_set_header Host $host;
      proxy_set_header X-Real-IP $remote_addr;
      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-@@ -111,7 +84,7 @@
+@@ -109,7 +82,7 @@
  
      rewrite ^/auth/(.*)  /$1 break;
  
@@ -78,7 +76,7 @@
      proxy_read_timeout    90;
      proxy_connect_timeout 90;
      proxy_redirect        off;
-@@ -136,4 +109,5 @@
+@@ -134,4 +107,5 @@
      tcp_nopush on;
      tcp_nodelay on;
    }
