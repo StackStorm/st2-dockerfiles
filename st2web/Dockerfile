@@ -17,6 +17,7 @@ LABEL com.stackstorm.component="st2web"
 
 ENV container docker
 ENV TERM xterm
+ENV ST2WEB_HTTPS 0
 
 # Default, but overrideable env vars to be substituted in st2.template nginx conf
 ENV ST2_AUTH_URL http://st2auth:9100/
@@ -54,7 +55,8 @@ RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
   && rm -f /etc/apt/sources.list.d/StackStorm_*.list
 
 # Download st2.conf and apply patch
-COPY files/st2.conf.patch /tmp
+COPY files/st2.conf-http.patch /tmp
+COPY files/st2.conf-https.patch /tmp
 RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
     ST2_BRANCH=master; \
   else \
@@ -62,10 +64,14 @@ RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
   fi \
   && echo ST2_BRANCH=${ST2_BRANCH} \
   && apt-get install -y patch gettext-base \
-  && curl -sf https://raw.githubusercontent.com/StackStorm/st2/${ST2_BRANCH}/conf/nginx/st2.conf -o /etc/nginx/conf.d/st2.template \
-  && patch /etc/nginx/conf.d/st2.template < /tmp/st2.conf.patch \
+  && curl -sf https://raw.githubusercontent.com/StackStorm/st2/${ST2_BRANCH}/conf/nginx/st2.conf -o /etc/nginx/conf.d/st2-http.template \
+  && cp /etc/nginx/conf.d/st2-http.template /etc/nginx/conf.d/st2-https.template \
+  && patch /etc/nginx/conf.d/st2-http.template < /tmp/st2.conf-http.patch \
+  && patch /etc/nginx/conf.d/st2-https.template < /tmp/st2.conf-https.patch \
   && rm -f /etc/nginx/conf.d/default.conf \
-  && rm -f /tmp/st2.conf.patch
+  && rm -f /tmp/st2.conf.patch \
+  && rm -f /tmp/st2.conf-http.patch \
+  && rm -f /tmp/st2.conf-https.patch
 
 # It's a user's responsbility to pass the valid SSL certificate files: 'st2.key' and 'st2.crt', used in nginx
 VOLUME ["/etc/ssl/st2/"]
@@ -73,4 +79,4 @@ VOLUME ["/etc/ssl/st2/"]
 EXPOSE 80
 EXPOSE 443
 STOPSIGNAL SIGTERM
-CMD ["/bin/bash", "-c", "envsubst '${ST2_AUTH_URL} ${ST2_API_URL} ${ST2_STREAM_URL}' < /etc/nginx/conf.d/st2.template > /etc/nginx/conf.d/st2.conf && exec nginx -g 'daemon off;'"]
+CMD ["/bin/bash", "-c", "if [ ${ST2WEB_HTTPS} = 1 ]; then ST2WEB_TEMPLATE='/etc/nginx/conf.d/st2-https.template'; else ST2WEB_TEMPLATE='/etc/nginx/conf.d/st2-http.template'; fi && envsubst '${ST2_AUTH_URL} ${ST2_API_URL} ${ST2_STREAM_URL}' < ${ST2WEB_TEMPLATE} > /etc/nginx/conf.d/st2.conf && exec nginx -g 'daemon off;'"]

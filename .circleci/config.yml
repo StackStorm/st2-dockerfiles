@@ -39,7 +39,11 @@ workflows:
   # Build and Push Docker images
   docker-build-push:
     jobs:
-      - docker
+      - docker:
+          filters:
+            tags:
+              only:
+                - /.*/
   # Build and Push nightly 'dev' Docker images from 'master' branch
   nightly-dev-push:
     triggers:

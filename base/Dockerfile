@@ -42,6 +42,11 @@ RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
   && curl -sf https://packagecloud.io/install/repositories/StackStorm/${ST2_REPO}/script.deb.sh | bash \
   && apt-get install -y st2=${ST2_VERSION}-* \
   && rm -f /etc/apt/sources.list.d/StackStorm_*.list
+  
+# Install redis client library for st2 coordination backend
+# See: https://docs.stackstorm.com/reference/ha.html#zookeeper-redis
+# See: https://docs.stackstorm.com/latest/reference/policies.html
+RUN /opt/stackstorm/st2/bin/pip install redis
 
 # Add custom st2 empty config file, used to override original st2.conf
 COPY files/st2.docker.conf /etc/st2/
