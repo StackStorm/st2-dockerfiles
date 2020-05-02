@@ -13,9 +13,11 @@ build:
 	@echo -e "\033[32mSuccessfully built \033[1mstackstorm/st2:${DOCKER_TAG}\033[0m\033[32m common Docker image with StackStorm version \033[1m${ST2_VERSION}\033[0m"
 	@set -e; \
 	for component in st2*; do \
+                echo -e "\033[32mStarting build of \033[1mstackstorm/$$component:${DOCKER_TAG}\033[0m\033[32m Docker image for StackStorm version \033[1m${ST2_VERSION}\033[0m"; \
 		docker build \
 			--no-cache \
 			--build-arg ST2_VERSION=${ST2_VERSION} \
+			--build-arg DOCKER_TAG=${DOCKER_TAG} \
 			--tag stackstorm/$$component:${DOCKER_TAG} \
 			$$component/; \
 		echo -e "\033[32mSuccessfully built \033[1mstackstorm/$$component:${DOCKER_TAG}\033[0m\033[32m Docker image for StackStorm version \033[1m${ST2_VERSION}\033[0m"; \

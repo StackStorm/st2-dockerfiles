@@ -1,5 +1,6 @@
 ARG ST2_VERSION
-FROM stackstorm/st2:${ST2_VERSION}
+ARG DOCKER_TAG
+FROM stackstorm/st2:${DOCKER_TAG}
 LABEL com.stackstorm.component="st2scheduler"
 
 USER st2
