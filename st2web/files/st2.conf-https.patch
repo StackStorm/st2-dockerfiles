@@ -1,5 +1,5 @@
---- /etc/nginx/conf.d/st2.template	2019-05-27 14:11:20.000000000 -0700
-+++ /etc/nginx/conf.d/st2.conf	2019-05-27 14:22:11.000000000 -0700
+--- /etc/nginx/conf.d/st2.template	2020-05-10 02:12:53.977869285 +0200
++++ /etc/nginx/conf.d/st2.conf	2020-05-10 02:17:47.307939010 +0200
 @@ -18,8 +18,8 @@
  
    index  index.html;
@@ -11,7 +11,7 @@
  }
  
  server {
-@@ -35,8 +35,8 @@
+@@ -35,12 +35,14 @@
  
    index  index.html;
  
@@ -22,30 +22,42 @@
  
    add_header              Front-End-Https on;
    add_header              X-Content-Type-Options nosniff;
-@@ -51,7 +51,7 @@
+ 
++  resolver 127.0.0.11 valid=1s;
++
+   location @apiError {
+     add_header Content-Type application/json always;
+     return 503 '{ "faultstring": "Nginx is unable to reach st2api. Make sure service is running." }';
+@@ -51,7 +53,9 @@
  
      rewrite ^/api/(.*)  /$1 break;
  
 -    proxy_pass            http://127.0.0.1:9101/;
-+    proxy_pass            ${ST2_API_URL};
++    set api_upstream ${ST2_API_URL};
++
++    proxy_pass            $api_upstream;
      proxy_read_timeout    90;
      proxy_connect_timeout 90;
      proxy_redirect        off;
-@@ -81,7 +81,7 @@
+@@ -81,7 +85,9 @@
  
      rewrite ^/stream/(.*)  /$1 break;
  
 -    proxy_pass  http://127.0.0.1:9102/;
-+    proxy_pass  ${ST2_STREAM_URL};
++    set stream_upstream ${ST2_STREAM_URL};
++
++    proxy_pass  $stream_upstream;
      proxy_set_header Host $host;
      proxy_set_header X-Real-IP $remote_addr;
      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-@@ -109,7 +109,7 @@
+@@ -109,7 +115,9 @@
  
      rewrite ^/auth/(.*)  /$1 break;
  
 -    proxy_pass            http://127.0.0.1:9100/;
-+    proxy_pass            ${ST2_AUTH_URL};
++    set auth_upstream ${ST2_AUTH_URL};
++
++    proxy_pass            $auth_upstream;
      proxy_read_timeout    90;
      proxy_connect_timeout 90;
      proxy_redirect        off;

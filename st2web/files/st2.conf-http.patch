@@ -1,5 +1,5 @@
---- /etc/nginx/conf.d/st2.template	2019-05-27 14:11:20.000000000 -0700
-+++ /etc/nginx/conf.d/st2.conf	2019-05-27 14:22:28.000000000 -0700
+--- /etc/nginx/conf.d/st2.template	2020-05-10 02:12:53.977869285 +0200
++++ /etc/nginx/conf.d/st2.conf	2020-05-10 02:13:07.373975299 +0200
 @@ -1,6 +1,6 @@
  #
 -# nginx configuration to expose st2 webui, redirect HTTP->HTTPS,
@@ -9,7 +9,7 @@
  # To enable:
  #    cp ${LOCATION}/st2.conf /etc/nginx/sites-available
  #    ln -l /etc/nginx/sites-available/st2.conf /etc/nginx/sites-enabled/st2.conf
-@@ -9,37 +9,12 @@
+@@ -9,37 +9,14 @@
  server {
    listen *:80 default_server;
  
@@ -41,44 +41,52 @@
  
 -  access_log            /var/log/nginx/ssl-st2webui.access.log combined;
 -  error_log             /var/log/nginx/ssl-st2webui.error.log;
--
--  add_header              Front-End-Https on;
--  add_header              X-Content-Type-Options nosniff;
 +  access_log /proc/self/fd/1 combined;
 +  error_log stderr;
  
+-  add_header              Front-End-Https on;
+-  add_header              X-Content-Type-Options nosniff;
++  resolver 127.0.0.11 valid=1s;
+ 
    location @apiError {
      add_header Content-Type application/json always;
-@@ -51,7 +24,7 @@
+@@ -51,7 +28,9 @@
  
      rewrite ^/api/(.*)  /$1 break;
  
 -    proxy_pass            http://127.0.0.1:9101/;
-+    proxy_pass            ${ST2_API_URL};
++    set api_upstream ${ST2_API_URL};
++
++    proxy_pass            $api_upstream;
      proxy_read_timeout    90;
      proxy_connect_timeout 90;
      proxy_redirect        off;
-@@ -81,7 +54,7 @@
+@@ -81,7 +60,9 @@
  
      rewrite ^/stream/(.*)  /$1 break;
  
 -    proxy_pass  http://127.0.0.1:9102/;
-+    proxy_pass  ${ST2_STREAM_URL};
++    set stream_upstream ${ST2_STREAM_URL};
++
++    proxy_pass  $stream_upstream;
      proxy_set_header Host $host;
      proxy_set_header X-Real-IP $remote_addr;
      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-@@ -109,7 +82,7 @@
+@@ -109,7 +90,9 @@
  
      rewrite ^/auth/(.*)  /$1 break;
  
 -    proxy_pass            http://127.0.0.1:9100/;
-+    proxy_pass            ${ST2_AUTH_URL};
++    set auth_upstream ${ST2_AUTH_URL};
++
++    proxy_pass            $auth_upstream;
      proxy_read_timeout    90;
      proxy_connect_timeout 90;
      proxy_redirect        off;
-@@ -134,4 +107,5 @@
+@@ -134,5 +117,5 @@
      tcp_nopush on;
      tcp_nodelay on;
    }
-+
- }
+-}
+ 
++}
