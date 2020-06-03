@@ -8,6 +8,7 @@ printf " * Documentation: https://docs.stackstorm.com/\n"
 printf " * Community: https://stackstorm.com/community-signup\n"
 printf " * Forum: https://forum.stackstorm.com/\n"
 printf " * \033[1;38;5;93mEnterprise: https://stackstorm.com/#product\033[0m\n\n"
+# User logged into st2client container
 if [ -n "$ST2CLIENT" ]; then
   printf " Here you can use StackStorm CLI. Examples:\n"
   printf "   st2 action list --pack=core\n"
@@ -15,9 +16,11 @@ if [ -n "$ST2CLIENT" ]; then
   printf "   st2 run core.local_sudo cmd='apt-get update' --tail\n"
   printf "   st2 execution list\n"
   printf "\n"
+else
+  printf " \033[1mNotice!\033[0m It's recommended to use \033[1mst2client\033[0m container to work with StackStorm cluster.\n"
 fi
-printf " \033[1mWarning!\033[0m Do not edit configs, packs or any content inplace as they will be overridden. Modify Helm values.yaml instead!\n"
-if [ ! -n "$ST2CLIENT" ]; then
-  printf " It's recommended to use \033[1mst2client\033[0m container to work with StackStorm cluster.\n"
+# Is K8s environment
+if [ -n "$KUBERNETES_PORT" ]; then
+  printf " \033[1mWarning!\033[0m Do not edit configs, packs or any content inplace as they will be overridden. Modify Helm values.yaml instead!\n"
 fi
 printf "\n"
