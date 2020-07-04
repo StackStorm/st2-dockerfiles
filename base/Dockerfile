@@ -43,6 +43,9 @@ RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
   && apt-get install -y st2=${ST2_VERSION}-* \
   && rm -f /etc/apt/sources.list.d/StackStorm_*.list
 
+# Remove openssh server keys
+RUN rm -f /etc/ssh/ssh_host*
+
 # Install redis client library for st2 coordination backend
 # See: https://docs.stackstorm.com/reference/ha.html#zookeeper-redis
 # See: https://docs.stackstorm.com/latest/reference/policies.html
@@ -81,6 +84,3 @@ RUN echo '. /etc/skel/.welcome' >> /home/st2/.bashrc
 # Used by all stackstorm services
 VOLUME ["/etc/st2"]
 WORKDIR /opt/stackstorm
-
-# Remove openssh server keys
-RUN rm -f /etc/ssh/ssh_host*
