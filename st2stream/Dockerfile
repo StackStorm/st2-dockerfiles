@@ -2,6 +2,10 @@ ARG ST2_VERSION
 FROM stackstorm/st2:${ST2_VERSION}
 LABEL com.stackstorm.component="st2stream"
 
+USER root
+
+RUN rm -f /etc/ssh/ssh_host*
+
 USER st2
 
 VOLUME ["/etc/st2/keys"]
