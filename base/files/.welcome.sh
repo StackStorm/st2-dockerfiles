@@ -6,8 +6,7 @@ UBUNTU_VERSION=$(lsb_release -s -d)
 printf "Welcome to \033[1;38;5;208mStackStorm HA\033[0m \033[1m%s\033[0m (${UBUNTU_VERSION} %s %s)\n" "v${ST2_VERSION}" "$(uname -o)" "$(uname -m)"
 printf " * Documentation: https://docs.stackstorm.com/\n"
 printf " * Community: https://stackstorm.com/community-signup\n"
-printf " * Forum: https://forum.stackstorm.com/\n"
-printf " * \033[1;38;5;93mEnterprise: https://stackstorm.com/#product\033[0m\n\n"
+printf " * Forum: https://forum.stackstorm.com/\n\n"
 # User logged into st2client container
 if [ -n "$ST2CLIENT" ]; then
   printf " Here you can use StackStorm CLI. Examples:\n"
