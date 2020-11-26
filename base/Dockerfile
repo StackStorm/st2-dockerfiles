@@ -46,6 +46,9 @@ RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
 # Remove openssh server keys
 RUN rm -f /etc/ssh/ssh_host*
 
+# Upgrade pip to latest
+RUN /opt/stackstorm/st2/bin/pip install -U pip
+
 # Install redis client library for st2 coordination backend
 # See: https://docs.stackstorm.com/reference/ha.html#zookeeper-redis
 # See: https://docs.stackstorm.com/latest/reference/policies.html
