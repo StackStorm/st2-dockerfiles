@@ -4,6 +4,11 @@ RELEASE_TAG_REGEX := [^dev]$$
 SHELL := /bin/bash
 
 TAG_UPDATE_FLAG = $(shell ./determine_needed_tags.sh st2 ${ST2_VERSION})
+# possible values of the TAG_UPDATE_FLAG
+# 0 = no additional tags to be set
+# 1 = add the major.minor tag
+# 2 = add the tags major and major.minor
+# 3 = add the latest tag (for future use)
 
 ifneq ($(shell echo ${ST2_VERSION} | grep -E "${RELEASE_TAG_REGEX}"), )
           RELEASE_VERSION = true
