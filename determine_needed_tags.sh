@@ -22,7 +22,6 @@ if [ -z ${build_patch} ]; then
 fi
 
 readarray -t available_releases < $tmp_release_cache_file
-#latest_release_array=(${available_releases[-1]//\./ })
 latest_release=${available_releases[-1]}
 latest_release_array=(${latest_release//\./ })
 
@@ -30,14 +29,12 @@ latest_major=${latest_release_array[0]}
 latest_minor=${latest_release_array[1]}
 latest_patch=${latest_release_array[2]}
 
+tag_update_flag=0
 # possible values of the tag_update flag:
 # 0 = no additional tags to be set
 # 1 = add the major.minor tag
 # 2 = add the tags major and major.minor
 # 3 = add the latest tag (for future use)
-
-tag_update_flag=0
-
 
 if [ ${build_version} == ${latest_release} ]; then
 	tag_update_flag=2
@@ -67,3 +64,5 @@ else
 		tag_update_flag=2
 	fi
 fi
+
+echo $tag_update_flag

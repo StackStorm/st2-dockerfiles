@@ -1,7 +1,9 @@
-ST2_VERSION ?= 3.4dev
+ST2_VERSION ?= 3.3.0
 DOCKER_TAG ?= ${ST2_VERSION}
 RELEASE_TAG_REGEX := [^dev]$$
 SHELL := /bin/bash
+
+TAG_UPDATE_FLAG = $(shell ./determine_needed_tags.sh st2 ${ST2_VERSION})
 
 ifneq ($(shell echo ${ST2_VERSION} | grep -E "${RELEASE_TAG_REGEX}"), )
           RELEASE_VERSION = true
@@ -31,11 +33,18 @@ build:
 		echo -e "\033[32mSuccessfully built \033[1mstackstorm/$$component:${DOCKER_TAG}\033[0m\033[32m Docker image for StackStorm version \033[1m${ST2_VERSION}\033[0m"; \
 	done
 ifeq ($(RELEASE_VERSION), true)
+ifeq ($(TAG_UPDATE_FLAG), 1)
+	for image in st2 st2*; do \
+	    docker tag stackstorm/$$image:${DOCKER_TAG} stackstorm/$$image:${MAJOR}.${MINOR}; \
+	    echo -e "\033[32mSuccessfully tagged \033[1mstackstorm/$$image:${DOCKER_TAG}\033[0m\033[32m with \033[1mstackstorm/$$image:${MAJOR}.${MINOR}\033[0m"; \
+	done
+else ifeq ($(TAG_UPDATE_FLAG), 2)
 	for image in st2 st2*; do \
 	    docker tag stackstorm/$$image:${DOCKER_TAG} stackstorm/$$image:${MAJOR}; \
 	    docker tag stackstorm/$$image:${DOCKER_TAG} stackstorm/$$image:${MAJOR}.${MINOR}; \
 	    echo -e "\033[32mSuccessfully tagged \033[1mstackstorm/$$image:${DOCKER_TAG}\033[0m\033[32m with \033[1mstackstorm/$$image:${MAJOR}\033[0m\033[32m and \033[1mstackstorm/$$image:${MAJOR}.${MINOR}\033[0m"; \
 	done
+endif
 endif
 
 .PHONY: push
