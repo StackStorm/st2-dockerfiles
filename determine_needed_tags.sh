@@ -5,8 +5,8 @@ build_version=$2
 
 if [[ ${build_version} =~ ^([0-9]+)\.([0-9]+).?([0-9]*)$ ]]; then
   build_major=${BASH_REMATCH[1]}
-    build_minor=${BASH_REMATCH[2]}
-    build_patch=${BASH_REMATCH[3]}
+  build_minor=${BASH_REMATCH[2]}
+  build_patch=${BASH_REMATCH[3]}
 else
   echo "The provided version ${build_version} does not have the expected format."
   exit 1
@@ -17,14 +17,14 @@ if [ -z ${build_patch} ]; then
 fi
 
 # dockerhub lists the tags in ascending order. 1st object = lowest tag; last object = highest tag
-readarray -t available_releases < <(curl -s https://registry.hub.docker.com/v1/repositories/stackstorm/${component}/tags | jq -r '.[] | select(.name | endswith("dev") | not).name')
+docker_tags_json=$(curl -s https://registry.hub.docker.com/v1/repositories/stackstorm/${component}/tags)
+readarray -t available_releases < <(echo $docker_tags_json | jq -r '.[] | select(.name | endswith("dev") | not).name')
 
 latest_release=${available_releases[-1]}
 latest_release_array=(${latest_release//\./ })
 
 latest_major=${latest_release_array[0]}
 latest_minor=${latest_release_array[1]}
-latest_patch=${latest_release_array[2]}
 
 tag_update_flag=0
 # possible values of the tag_update flag:
@@ -34,27 +34,30 @@ tag_update_flag=0
 # 3 = add the latest tag (for future use)
 
 if [ ${build_version} == ${latest_release} ]; then
+  # building a release of the latest st2 version
   tag_update_flag=2
 else
-  if [ ${build_major} -lt ${latest_major} ]; then
-    readarray -t build_version_major_matching_releases < <(grep ${build_major} $tmp_release_cache_file)
-    latest_build_version_major_matching_release=${build_version_major_matching_releases[-1]}
-    latest_build_version_major_matching_release_array=(${latest_build_version_major_matching_release//\./ })
-    latest_build_version_major_matching_minor=${latest_build_version_major_matching_release_array[1]}
-    latest_build_version_major_matching_patch=${latest_build_version_major_matching_release_array[2]}
-    if [ ${build_minor} -gt ${latest_build_version_major_matching_minor} ]; then
-      tag_update_flag=2
-    elif [ ${build_minor} -eq ${latest_build_version_major_matching_minor} ] && [ ${build_patch} -ge ${latest_build_version_major_matching_patch} ]; then
-      tag_update_flag=2
-    else
-      # building a release for a major version that is *not* the latest of the given major
-      readarray -t build_version_major_minor_matching_releases < <(grep ${build_major}.${build_minor} $tmp_release_cache_file)
-      latest_build_version_major_minor_matching_release=${build_version_major_matching_releases[-1]}
+  # building a release for a st2 version that does not match the latest version
+  if [ ${build_major} -le ${latest_major} ]; then
+    # building a release for an older major
+    readarray -t build_version_major_minor_matching_releases < <(echo $docker_tags_json | jq -r '.[] | select(.name | endswith("dev") | not) | select(.name | startswith("'"${build_major}.${build_minor}"'")).name')
+    if [ ${#build_version_major_minor_matching_releases[@]} -ge 1 ]; then
+      # at least one version matching the current builds major and minor version is available
+      latest_build_version_major_minor_matching_release=${build_version_major_minor_matching_releases[-1]}
       latest_build_version_major_minor_matching_release_array=(${latest_build_version_major_minor_matching_release//\./ })
+      latest_build_version_major_minor_matching_major=${latest_build_version_major_minor_matching_release_array[0]}
+      latest_build_version_major_minor_matching_minor=${latest_build_version_major_minor_matching_release_array[1]}
       latest_build_version_major_minor_matching_patch=${latest_build_version_major_minor_matching_release_array[2]}
-      if [ ${build_patch} -ge ${latest_build_version_major_minor_matching_patch}]; then
+      if [ ${build_minor} -ge ${latest_build_version_major_minor_matching_patch} ] && [ ${build_patch} -ge ${latest_build_version_major_minor_matching_patch} ]; then
+        # building a release for a new or updated patch version of the current or a new minor version
+        tag_update_flag=2
+      elif [ ${build_minor} -lt ${latest_build_version_major_minor_matching_minor} ] && [ ${build_patch} -ge ${latest_build_version_major_minor_matching_patch} ]; then
+        # building a patch release for an older minor version
         tag_update_flag=1
       fi
+    else
+      # building a release for an old, unreleased major version of st2
+      tag_update_flag=2
     fi
   else
     # building a release for a new major version
