@@ -2,7 +2,6 @@
 
 component=$1
 build_version=$2
-tmp_release_cache_file=/tmp/dockerhub_st2_releases
 
 if [[ ${build_version} =~ ^([0-9]+)\.([0-9]+).?([0-9]*)$ ]]; then
   build_major=${BASH_REMATCH[1]}
@@ -13,14 +12,13 @@ else
   exit 1
 fi
 
-# dockerhub lists the tags in ascending order. 1st object = lowest tag; last object = highest tag
-curl -s https://registry.hub.docker.com/v1/repositories/stackstorm/${component}/tags | jq -r '.[] | select(.name | endswith("dev") | not).name' > ${tmp_release_cache_file}
-
 if [ -z ${build_patch} ]; then 
   build_patch=0
 fi
 
-readarray -t available_releases < $tmp_release_cache_file
+# dockerhub lists the tags in ascending order. 1st object = lowest tag; last object = highest tag
+readarray -t available_releases < <(curl -s https://registry.hub.docker.com/v1/repositories/stackstorm/${component}/tags | jq -r '.[] | select(.name | endswith("dev") | not).name')
+
 latest_release=${available_releases[-1]}
 latest_release_array=(${latest_release//\./ })
 
