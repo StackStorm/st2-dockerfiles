@@ -2,7 +2,6 @@
 
 component=$1
 build_version=$2
-registry=registry.hub.docker.com
 tmp_release_cache_file=/tmp/dockerhub_st2_releases
 
 if [[ ${build_version} =~ ^([0-9]+)\.([0-9]+).?([0-9]*)$ ]]; then
@@ -15,7 +14,7 @@ else
 fi
 
 # dockerhub lists the tags in ascending order. 1st object = lowest tag; last object = highest tag
-curl -s https://${registry}/v1/repositories/stackstorm/${component}/tags | jq -r '.[] | select(.name | endswith("dev") | not).name' > ${tmp_release_cache_file}
+curl -s https://registry.hub.docker.com/v1/repositories/stackstorm/${component}/tags | jq -r '.[] | select(.name | endswith("dev") | not).name' > ${tmp_release_cache_file}
 
 if [ -z ${build_patch} ]; then 
   build_patch=0
