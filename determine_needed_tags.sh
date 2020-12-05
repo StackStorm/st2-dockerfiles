@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
+# the first argument must be the name of the container, i.e. st2, st2actionrunner, st2stream
 component=$1
+# the 2nd argument is the version of the current build and expects at least major.miinor to be provided
+# i.e. 3.3.0, 3.3, 2.10.5
 build_version=$2
 
 if [[ ${build_version} =~ ^([0-9]+)\.([0-9]+).?([0-9]*)$ ]]; then
@@ -16,10 +19,12 @@ if [ -z ${build_patch} ]; then
   build_patch=0
 fi
 
-# dockerhub lists the tags in ascending order. 1st object = lowest tag; last object = highest tag
+# dockerhub lists the tags in ascending order. 1st object = lowest tag; last object = highest tag or latest
 docker_tags_json=$(curl -s https://registry.hub.docker.com/v1/repositories/stackstorm/${component}/tags)
-readarray -t available_releases < <(echo $docker_tags_json | jq -r '.[] | select(.name | endswith("dev") | not).name')
+readarray -t available_releases < <(echo $docker_tags_json | jq -r '.[] | select(.name | endswith("dev") | not).name' | sort)
 
+# sort returns the list with the highest tag or "latest" as last item
+# so change the value below to -2 when introducing the tag latest to get i.e. 3.3.0 instead of latest
 latest_release=${available_releases[-1]}
 latest_release_array=(${latest_release//\./ })
 
@@ -51,7 +56,7 @@ else
       if [ ${build_minor} -ge ${latest_build_version_major_minor_matching_patch} ] && [ ${build_patch} -ge ${latest_build_version_major_minor_matching_patch} ]; then
         # building a release for a new or updated patch version of the current or a new minor version
         tag_update_flag=2
-      elif [ ${build_minor} -lt ${latest_build_version_major_minor_matching_minor} ] && [ ${build_patch} -ge ${latest_build_version_major_minor_matching_patch} ]; then
+    elif [ ${build_minor} -lt ${latest_build_version_major_minor_matching_minor} ] && [ ${build_patch} -ge ${latest_build_version_major_minor_matching_patch} ]; then
         # building a patch release for an older minor version
         tag_update_flag=1
       fi
