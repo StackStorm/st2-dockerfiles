@@ -6,6 +6,35 @@ component=$1
 # i.e. 3.3.0, 3.3, 2.10.5
 build_version=$2
 
+showHelp() {
+  echo "Use this script to determine the right tags to be attached to your new image."
+  echo
+  echo "Syntax: $0 st2component image_version"
+  echo "st2component = an valid image of an existing stackstorm component (i.e. st2, st2api, st2stream)"
+  echo "image_version = the st2 release used for your current build (i.e. 3.3.0)"
+  echo 
+  echo "Possible output:"
+  echo "0 = no additional tags to be updated"
+  echo "1 = update the major.minor tag (i.e. 3.3)"
+  echo "2 = update the major and the major.minor tag (i.e. 3 and 3.3)"
+  echo
+  echo "Run $0 -h|--help to show this usage information."
+}
+
+case $1 in
+  -h|--help)
+    showHelp
+    exit
+  ;;
+esac
+
+if [ "$#" -ne 2 ]; then
+  echo "Error: Missing or unexpected number of positional arguments. Expected: 2"
+  echo
+  showHelp
+  exit 1
+fi
+
 if [[ ${build_version} =~ ^([0-9]+)\.([0-9]+).?([0-9]*)$ ]]; then
   build_major=${BASH_REMATCH[1]}
   build_minor=${BASH_REMATCH[2]}
