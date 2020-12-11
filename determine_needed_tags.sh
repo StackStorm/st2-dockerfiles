@@ -63,9 +63,13 @@ latest_minor=${latest_release_array[1]}
 tag_update_flag=0
 # possible values of the tag_update flag:
 # 0 = no additional tags to be set
+#     (this applies just in case of builds for older releases while a newer minor or minor.patch is already available)
 # 1 = add the major.minor tag
+#     (this applies, if the build is for is just for a new patch version)
 # 2 = add the tags major and major.minor
-# 3 = add the tags latest in addition to the tags from #2 
+#     (this applies if the build is for a version equal to or greater than the latest minor of a major)
+# 3 = add the tags latest in addition to the tags from #2
+#     (this applies if the build with the major, minor and patch version being equal to or greater than the currently latest version)
 
 if [ ${build_version} == ${latest_release} ]; then
   # building a release of the latest st2 version
