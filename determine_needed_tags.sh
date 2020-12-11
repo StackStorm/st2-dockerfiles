@@ -65,11 +65,11 @@ tag_update_flag=0
 # 0 = no additional tags to be set
 # 1 = add the major.minor tag
 # 2 = add the tags major and major.minor
-# 3 = add the latest tag (for future use)
+# 3 = add the tags latest in addition to the tags from #2 
 
 if [ ${build_version} == ${latest_release} ]; then
   # building a release of the latest st2 version
-  tag_update_flag=2
+  tag_update_flag=3
 else
   # building a release for a st2 version that does not match the latest version
   if [ ${build_major} -le ${latest_major} ]; then
@@ -84,7 +84,7 @@ else
       latest_build_version_major_minor_matching_patch=${latest_build_version_major_minor_matching_release_array[2]}
       if [ ${build_minor} -ge ${latest_build_version_major_minor_matching_patch} ] && [ ${build_patch} -ge ${latest_build_version_major_minor_matching_patch} ]; then
         # building a release for a new or updated patch version of the current or a new minor version
-        tag_update_flag=2
+        tag_update_flag=3
     elif [ ${build_minor} -lt ${latest_build_version_major_minor_matching_minor} ] && [ ${build_patch} -ge ${latest_build_version_major_minor_matching_patch} ]; then
         # building a patch release for an older minor version
         tag_update_flag=1
@@ -95,7 +95,7 @@ else
     fi
   else
     # building a release for a new major version
-    tag_update_flag=2
+    tag_update_flag=3
   fi
 fi
 
