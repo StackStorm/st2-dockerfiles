@@ -82,7 +82,7 @@ else
       latest_build_version_major_minor_matching_major=${latest_build_version_major_minor_matching_release_array[0]}
       latest_build_version_major_minor_matching_minor=${latest_build_version_major_minor_matching_release_array[1]}
       latest_build_version_major_minor_matching_patch=${latest_build_version_major_minor_matching_release_array[2]}
-      if [ ${build_minor} -ge ${latest_build_version_major_minor_matching_patch} ] && [ ${build_patch} -ge ${latest_build_version_major_minor_matching_patch} ]; then
+      if [ ${build_minor} -ge ${latest_build_version_major_minor_matching_minor} ] && [ ${build_patch} -ge ${latest_build_version_major_minor_matching_patch} ]; then
         # building a release for a new or updated patch version of the current or a new minor version
         tag_update_flag=3
     elif [ ${build_minor} -lt ${latest_build_version_major_minor_matching_minor} ] && [ ${build_patch} -ge ${latest_build_version_major_minor_matching_patch} ]; then
