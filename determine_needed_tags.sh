@@ -109,7 +109,17 @@ else
       elif [ ${build_minor} -eq ${latest_build_version_major_minor_matching_minor} ] && \
            [ ${build_patch} -ge ${latest_build_version_major_minor_matching_patch} ]; then
         # building a release for a new or updated patch version of an old major.minor version
-        tag_update_flag=2
+        readarray -t build_version_major_matching_releases < <(echo $docker_tags_json | jq -r '.[] | select(.name | endswith("dev") | not) | select(.name | startswith("'"${build_major}"'")).name')
+        latest_build_version_major_matching_release=${build_version_major_matching_releases[-1]}
+        latest_build_version_major_matching_release_array=(${latest_build_version_major_matching_release//\./ })
+        latest_build_version_major_matching_minor=${latest_build_version_major_matching_release_array[1]}
+        if [ ${build_minor} -ge ${latest_build_version_major_matching_minor} ]; then
+          # building a release for a new or updated patch version of the latest or a new minor version of the major release
+          tag_update_flag=2
+        else
+          # building a release for an older minor version of the major release
+          tag_update_flag=1
+        fi
       elif [ ${build_minor} -lt ${latest_minor} ] && [ ${build_patch} -ge ${latest_build_version_major_minor_matching_patch} ]; then
         # building a patch release for an older minor version
         tag_update_flag=1
