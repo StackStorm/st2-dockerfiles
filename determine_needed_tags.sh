@@ -109,7 +109,7 @@ else
       elif [ ${build_minor} -eq ${latest_build_version_major_minor_matching_minor} ] && \
            [ ${build_patch} -ge ${latest_build_version_major_minor_matching_patch} ]; then
         # building a release for a new or updated patch version of an old major.minor version
-        tag_update_flag=1
+        tag_update_flag=2
       elif [ ${build_minor} -lt ${latest_minor} ] && [ ${build_patch} -ge ${latest_build_version_major_minor_matching_patch} ]; then
         # building a patch release for an older minor version
         tag_update_flag=1
