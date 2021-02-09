@@ -17,6 +17,7 @@ showHelp() {
   echo "0 = no additional tags to be updated"
   echo "1 = update the major.minor tag (i.e. 3.3)"
   echo "2 = update the major and the major.minor tag (i.e. 3 and 3.3)"
+  echo "3 = update the major and the major.minor tag (i.e. 3 and 3.3) as well as the latest tag"
   echo
   echo "Run $0 -h|--help to show this usage information."
 }

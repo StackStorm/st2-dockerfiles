@@ -1,4 +1,4 @@
-ST2_VERSION ?= 3.4dev
+ST2_VERSION ?= 3.3.0
 DOCKER_TAG ?= ${ST2_VERSION}
 RELEASE_TAG_REGEX := [^dev]$$
 SHELL := /bin/bash
@@ -8,7 +8,7 @@ TAG_UPDATE_FLAG = $(shell ./determine_needed_tags.sh st2 ${ST2_VERSION})
 # 0 = no additional tags to be set
 # 1 = add the major.minor tag
 # 2 = add the tags major and major.minor
-# 3 = add the latest tag (for future use)
+# 3 = add the tags major, major.minor and latest
 
 ifneq ($(shell echo ${ST2_VERSION} | grep -E "${RELEASE_TAG_REGEX}"), )
 		  RELEASE_VERSION = true
