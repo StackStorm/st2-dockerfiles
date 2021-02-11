@@ -25,14 +25,13 @@ jobs:
           command: docker images
       - run:
           name: Deploy image to Docker Hub
-          #shell: /bin/bash -eo pipefail
           command: |
-            #if [[ "${CIRCLE_BRANCH}" == "master" ]] || [[ "${CIRCLE_BRANCH}" =~ ^v[0-9]+\.[0-9]+$ ]]; then
-            docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}
-            make push
-            #else
-            #  echo "Skipping Docker push for '${CIRCLE_BRANCH}' branch..."
-            #fi
+            if [[ "${CIRCLE_BRANCH}" == "master" ]] || [[ "${CIRCLE_BRANCH}" =~ ^v[0-9]+\.[0-9]+$ ]]; then
+              docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}
+              make push
+            else
+              echo "Skipping Docker push for '${CIRCLE_BRANCH}' branch..."
+            fi
 
 workflows:
   version: 2
