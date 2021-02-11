@@ -76,7 +76,7 @@ fi
 
 # dockerhub lists the tags in ascending order. 1st object = lowest tag; last object = highest tag or latest
 docker_tags_json=$(curl -s https://registry.hub.docker.com/v1/repositories/stackstorm/${component}/tags)
-readarray -t available_releases < <(echo $docker_tags_json | jq -r '.[] | select(.name | endswith("dev") | not).name' | sort)
+readarray -t available_releases < <(echo $docker_tags_json | jq -r '.[] | select((.name | endswith("dev") | not) and (.name=="latest" | not)).name' | sort)
 
 # sort returns the list with the highest tag or "latest" as last item
 # so change the value below to -2 when introducing the tag latest to get i.e. 3.3.0 instead of latest
