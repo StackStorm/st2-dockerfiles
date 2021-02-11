@@ -138,7 +138,7 @@ else
     #  # building a release for an old, unreleased major version of st2
     #  tag_update_flag=2
     fi
-  else
+  elif [ ${build_major} -gt ${latest_major} ]; then
     # building a release for a new major version
     tag_update_flag=3
   fi
