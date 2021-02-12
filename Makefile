@@ -1,22 +1,22 @@
-ST2_VERSION ?= 3.3.0
+ST2_VERSION ?= 3.2.0
 DOCKER_TAG ?= ${ST2_VERSION}
 RELEASE_TAG_REGEX := [^dev]$$
 SHELL := /bin/bash
 
-TAG_UPDATE_FLAG = $(shell ./determine_needed_tags.sh st2 ${ST2_VERSION})
 # supported values of the TAG_UPDATE_FLAG
 # 0 = no additional tags to be set
 # 1 = add the major.minor tag
 # 2 = add the tags major and major.minor
 # 3 = add the tags major, major.minor and latest
+TAG_UPDATE_FLAG := $(shell ./determine_needed_tags.sh st2 ${ST2_VERSION})
 
 ifneq ($(shell echo ${ST2_VERSION} | grep -E "${RELEASE_TAG_REGEX}"), )
-		  RELEASE_VERSION = true
-		  MAJOR = $(word 1, $(subst ., ,${ST2_VERSION}))
-		  MINOR = $(word 2, $(subst ., ,${ST2_VERSION}))
-		  PATCH = $(word 3, $(subst ., ,${ST2_VERSION}))
+	RELEASE_VERSION := true
+	MAJOR := $(word 1, $(subst ., ,${ST2_VERSION}))
+	MINOR := $(word 2, $(subst ., ,${ST2_VERSION}))
+	PATCH := $(word 3, $(subst ., ,${ST2_VERSION}))
 else
-		  RELEASE_VERSION = false
+	RELEASE_VERSION := false
 endif
 
 # Build all required images (st2 base image plus st2 components)
