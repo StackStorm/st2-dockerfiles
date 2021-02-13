@@ -36,6 +36,19 @@ if [ "$#" -ne 2 ]; then
   exit 1
 fi
 
+# check for dependencies
+missing_package=""
+for dep in curl jq; do
+  if ! which $dep > /dev/null; then
+    missing_package+=" $dep"
+  fi
+done
+
+if [ ! -z ${missing_package} ]; then
+  echo "Requirement(s) not satisfied: ${missing_package}"
+  exit 1
+fi
+
 if [[ ${build_version} =~ ^([0-9]+)\.([0-9]+).?([0-9]*)$ ]]; then
   build_major=${BASH_REMATCH[1]}
   build_minor=${BASH_REMATCH[2]}
@@ -67,7 +80,6 @@ dockerhub_registry_status_code=$(curl -sfL -o /dev/null -w "%{http_code}" https:
 if [ ${dockerhub_registry_status_code} -eq 404 ]; then
   # there is no repository stackstorm/${component} available at dockerhub -> this build is for a new st2 component
   tag_update_flag=3
-  echo $tag_update_flag
   exit
 elif [ ${dockerhub_registry_status_code} -ne 200 ]; then
   echo "Unexpected HTTP statuscode for https://registry.hub.docker.com/v1/repositories/stackstorm/${component}/tags: ${dockerhub_registry_status_code}"
@@ -86,6 +98,10 @@ latest_release_array=(${latest_release//\./ })
 latest_major=${latest_release_array[0]}
 latest_minor=${latest_release_array[1]}
 
+# validate the value stored as latest_release
+if [[ ! ${latest_release} =~ ^([0-9]+)\.([0-9]+).?([0-9]*)$ ]]; then
+  echo "Unexpected error. The latest release ${latest_release} does not match the expected format."
+fi
 
 if [ ${build_version} == ${latest_release} ]; then
   # building a release of the latest st2 version
