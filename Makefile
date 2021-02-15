@@ -56,6 +56,8 @@ else ifeq ($(TAG_UPDATE_FLAG), 3)
 		docker tag stackstorm/$$image:${DOCKER_TAG} stackstorm/$$image:latest; \
 		echo -e "\033[32mSuccessfully tagged \033[1mstackstorm/$$image:${DOCKER_TAG}\033[0m\033[32m with \033[1mstackstorm/$$image:${MAJOR}\033[0m\033[32m, \033[1mstackstorm/$$image:${MAJOR}.${MINOR}\033[32m and \033[1mstackstorm/$$image:latest\033[0m"; \
 	done
+else
+	echo -e "\033[31mNo images were tagged due to an error when determining the correct tags: ${TAG_UPDATE_FLAG}\033[0m"
 endif
 endif
 
@@ -90,5 +92,7 @@ else ifeq ($(TAG_UPDATE_FLAG), 3)
 		docker push stackstorm/$$image:latest; \
 		echo -e "\033[32mSuccessfully pushed \033[1mstackstorm/$$image:latest\033[0m\033[32m Docker image for StackStorm version \033[1m${ST2_VERSION}\033[0m"; \
 	done
+else
+	echo -e "\033[31mNo images were tagged due to an error when determining the correct tags: ${TAG_UPDATE_FLAG}\033[0m"
 endif
 endif

@@ -31,7 +31,6 @@ esac
 
 if [ "$#" -ne 2 ]; then
   echo "Error: Missing or unexpected number of positional arguments. Expected: 2"
-  echo
   showHelp
   exit 1
 fi
