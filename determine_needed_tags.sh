@@ -37,15 +37,15 @@ if [ "$#" -ne 2 ]; then
 fi
 
 # check for dependencies
-missing_package=""
+missing_packages=""
 for dep in curl jq; do
   if ! which $dep > /dev/null; then
-    missing_package+=" $dep"
+    missing_packages+=" $dep"
   fi
 done
 
-if [ ! -z ${missing_package} ]; then
-  echo "Requirement(s) not satisfied: ${missing_package}"
+if [ ! -z "${missing_packages}" ]; then
+  echo "Requirement(s) not satisfied: ${missing_packages}"
   exit 1
 fi
 
