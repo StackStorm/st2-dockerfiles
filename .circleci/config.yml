@@ -18,6 +18,9 @@ jobs:
           name: Install Dependencies
           command: apk add make bash curl jq
       - run:
+          name: Update curl
+          command: apk add -U curl
+      - run:
           name: Build Docker images
           command: make build
       - run:
