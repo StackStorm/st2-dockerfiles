@@ -44,7 +44,7 @@ for dep in curl jq; do
 done
 
 if [ ! -z "${missing_packages}" ]; then
-  echo "Requirement(s) not satisfied: ${missing_packages}"
+  echo "Error: Requirement(s) not satisfied: ${missing_packages}"
   exit 1
 fi
 
@@ -53,7 +53,7 @@ if [[ ${build_version} =~ ^([0-9]+)\.([0-9]+).?([0-9]*)$ ]]; then
   build_minor=${BASH_REMATCH[2]}
   build_patch=${BASH_REMATCH[3]}
 else
-  echo "The provided version ${build_version} does not have the expected format."
+  echo "Error: The provided version ${build_version} does not have the expected format."
   exit 1
 fi
 
@@ -81,7 +81,7 @@ if [ ${dockerhub_registry_status_code} -eq 404 ]; then
   tag_update_flag=3
   exit
 elif [ ${dockerhub_registry_status_code} -ne 200 ]; then
-  echo "Unexpected HTTP statuscode for https://registry.hub.docker.com/v1/repositories/stackstorm/${component}/tags: ${dockerhub_registry_status_code}"
+  echo "Error: Unexpected HTTP statuscode for https://registry.hub.docker.com/v1/repositories/stackstorm/${component}/tags: ${dockerhub_registry_status_code}"
   exit 1
 fi
 
@@ -99,7 +99,7 @@ latest_minor=${latest_release_array[1]}
 
 # validate the value stored as latest_release
 if [[ ! ${latest_release} =~ ^([0-9]+)\.([0-9]+).?([0-9]*)$ ]]; then
-  echo "Unexpected error. The latest release ${latest_release} does not match the expected format."
+  echo "Error: Unexpected error. The latest release ${latest_release} does not match the expected format."
 fi
 
 if [ ${build_version} == ${latest_release} ]; then
