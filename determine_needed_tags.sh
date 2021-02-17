@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# See showHelp() for the supported output values if everything goes fine.
+# $(make) will handle any other output as unexpected and assume an error.
+# Use this to raise error and cause the CI to fail.
+
 # the first argument must be the name of the container, i.e. st2, st2actionrunner, st2stream
 component=$1
 # the 2nd argument is the version of the current build and expects at least major.miinor to be provided
