@@ -16,7 +16,10 @@ jobs:
           docker_layer_caching: false
       - run:
           name: Install Dependencies
-          command: apk add make bash
+          command: apk add make bash curl jq
+      - run:
+          name: Update curl
+          command: apk --upgrade --no-cache add curl
       - run:
           name: Build Docker images
           command: make build
