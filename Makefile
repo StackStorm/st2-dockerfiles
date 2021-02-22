@@ -95,7 +95,7 @@ endif
 
 verify_tag_update_flag:
 ifeq ($(RELEASE_VERSION), true)
-ifneq ($(shell echo "${TAG_UPDATE_FLAG}" | grep -E "Error:"),)
+ifneq ($(shell echo "${TAG_UPDATE_FLAG}" | grep -vE "^[0-3]"),)
 	@echo -e "Failed to identify the tags to be set."
 	@echo -e "\033[31mNo images were tagged due to an error when determining the correct tags: ${TAG_UPDATE_FLAG}\033[0m"
 	exit 1
