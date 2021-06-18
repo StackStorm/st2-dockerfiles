@@ -1,5 +1,5 @@
---- /etc/nginx/conf.d/st2.template	2021-04-01 19:37:46.852016859 +0200
-+++ /etc/nginx/conf.d/st2.conf	2021-04-01 19:39:30.233113482 +0200
+--- st2.conf	2021-06-18 19:45:50.892196136 +0100
++++ st2.https.conf	2021-06-18 19:45:50.884196198 +0100
 @@ -20,8 +20,8 @@
    }
    index  index.html;
@@ -17,21 +17,21 @@
  
 -  access_log            /var/log/nginx/ssl-st2webui.access.log combined;
 -  error_log             /var/log/nginx/ssl-st2webui.error.log;
-+  access_log /proc/self/fd/1 combined;
-+  error_log stderr;
++  access_log            /proc/self/fd/1 combined;
++  error_log             stderr;
  
    add_header              Front-End-Https on;
    add_header              X-Content-Type-Options nosniff;
 @@ -61,7 +61,7 @@
  
      rewrite ^/api/(.*)  /$1 break;
-     
+ 
 -    proxy_pass            http://127.0.0.1:9101/;
 +    proxy_pass            ${ST2_API_URL};
      proxy_read_timeout    90;
      proxy_connect_timeout 90;
      proxy_redirect        off;
-@@ -92,7 +92,7 @@
+@@ -99,7 +99,7 @@
  
      rewrite ^/stream/(.*)  /$1 break;
  
@@ -40,12 +40,11 @@
      proxy_set_header Host $host;
      proxy_set_header X-Real-IP $remote_addr;
      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-@@ -123,7 +123,8 @@
+@@ -138,7 +138,7 @@
  
      rewrite ^/auth/(.*)  /$1 break;
-     
+ 
 -    proxy_pass            http://127.0.0.1:9100/;
-+
 +    proxy_pass            ${ST2_AUTH_URL};
      proxy_read_timeout    90;
      proxy_connect_timeout 90;
