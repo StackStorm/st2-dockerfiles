@@ -47,7 +47,7 @@ RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
   fi \
   && echo ST2_REPO=${ST2_REPO} \
   && curl -s https://packagecloud.io/install/repositories/StackStorm/${ST2_REPO}/script.deb.sh | bash \
-  && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
+  && curl -sL https://deb.nodesource.com/setup_14.x | bash - \
   && apt-get install -y st2chatops=${ST2_VERSION}-* \
   && rm -f /etc/apt/sources.list.d/nodesource.list \
   && rm -f /etc/apt/sources.list.d/StackStorm_*.list
