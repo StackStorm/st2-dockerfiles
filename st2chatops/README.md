@@ -6,6 +6,7 @@ Containerized `st2chatops` nodejs app, the StackStorm chatops bi-directional ser
 ## Configuration
 ### `ENV` vars
 The following environment variables are required for `st2chatops` configuration:
+- `ST2_CHATOPS_ENABLE` - To enable chatops, set this variable to any non-zero value.
 - `ST2_AUTH_URL` (default: `http://st2auth:9100/`) - Remote StackStorm Auth service URL.
 - `ST2_API_URL` (default: `http://st2api:9101/`) - Remote StackStorm API service URL.
 - `ST2_STREAM_URL` (default: `http://st2stream:9102/`) - Remote StackStorm Stream service URL.
