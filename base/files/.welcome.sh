@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Get st2 version based on hardcoded string in st2common
-ST2_VERSION=$(/opt/stackstorm/st2/bin/python -c 'exec(open("/opt/stackstorm/st2/lib/python3.6/site-packages/st2common/__init__.py").read()); print(__version__)')
+ST2_VERSION=$(/opt/stackstorm/st2/bin/python -c 'exec(open("/opt/stackstorm/st2/lib/python3.8/site-packages/st2common/__init__.py").read()); print(__version__)')
 UBUNTU_VERSION=$(lsb_release -s -d)
 printf "Welcome to \033[1;38;5;208mStackStorm HA\033[0m \033[1m%s\033[0m (${UBUNTU_VERSION} %s %s)\n" "v${ST2_VERSION}" "$(uname -o)" "$(uname -m)"
 printf " * Documentation: https://docs.stackstorm.com/\n"
