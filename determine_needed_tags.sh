@@ -78,20 +78,20 @@ tag_update_flag=0
 #     or if the build is for a completely new st2 component)
 
 # check if there are already images for the given component available at dockerhub
-dockerhub_registry_status_code=$(curl -sfL -o /dev/null -w "%{http_code}" https://registry.hub.docker.com/v1/repositories/stackstorm/${component}/tags)
+dockerhub_registry_status_code=$(curl -sfL -o /dev/null -w "%{http_code}" https://hub.docker.com/v2/repositories/stackstorm/${component}/tags)
 
 if [ ${dockerhub_registry_status_code} -eq 404 ]; then
   # there is no repository stackstorm/${component} available at dockerhub -> this build is for a new st2 component
   tag_update_flag=3
   exit
 elif [ ${dockerhub_registry_status_code} -ne 200 ]; then
-  echo "Error: Unexpected HTTP statuscode for https://registry.hub.docker.com/v1/repositories/stackstorm/${component}/tags: ${dockerhub_registry_status_code}"
+  echo "Error: Unexpected HTTP statuscode for https://hub.docker.com/v2/repositories/stackstorm/${component}/tags: ${dockerhub_registry_status_code}"
   exit 1
 fi
 
 # dockerhub lists the tags in ascending order. 1st object = lowest tag; last object = highest tag or latest
-docker_tags_json=$(curl -s https://registry.hub.docker.com/v1/repositories/stackstorm/${component}/tags)
-readarray -t available_releases < <(echo $docker_tags_json | jq -r '.[] | select((.name | endswith("dev") | not) and (.name=="latest" | not)).name' | sort)
+docker_tags_json=$(curl -s https://hub.docker.com/v2/repositories/stackstorm/${component}/tags)
+readarray -t available_releases < <(echo $docker_tags_json | jq -r '.results | .[] | select((.name | endswith("dev") | not) and (.name=="latest" | not)).name' | sort)
 
 # sort returns the list with the highest tag or "latest" as last item
 # so change the value below to -2 when introducing the tag latest to get i.e. 3.3.0 instead of latest
@@ -113,7 +113,7 @@ else
   # building a release for a st2 version that does not match the latest version
   if [ ${build_major} -le ${latest_major} ]; then
     # building a release for an older major
-    readarray -t build_version_major_minor_matching_releases < <(echo $docker_tags_json | jq -r '.[] | select(.name | endswith("dev") | not) | select(.name | startswith("'"${build_major}.${build_minor}"'")).name')
+    readarray -t build_version_major_minor_matching_releases < <(echo $docker_tags_json | jq -r '.results | .[] | select(.name | endswith("dev") | not) | select(.name | startswith("'"${build_major}.${build_minor}"'")).name')
     if [ ${#build_version_major_minor_matching_releases[@]} -ge 1 ]; then
       # at least one version matching the current builds major and minor version is available
       latest_build_version_major_minor_matching_release=${build_version_major_minor_matching_releases[-1]}
@@ -129,7 +129,7 @@ else
       elif [ ${build_minor} -eq ${latest_build_version_major_minor_matching_minor} ] && \
            [ ${build_patch} -ge ${latest_build_version_major_minor_matching_patch} ]; then
         # building a release for a new or updated patch version of an old major.minor version
-        readarray -t build_version_major_matching_releases < <(echo $docker_tags_json | jq -r '.[] | select(.name | endswith("dev") | not) | select(.name | startswith("'"${build_major}"'")).name')
+        readarray -t build_version_major_matching_releases < <(echo $docker_tags_json | jq -r '.results | .[] | select(.name | endswith("dev") | not) | select(.name | startswith("'"${build_major}"'")).name')
         latest_build_version_major_matching_release=${build_version_major_matching_releases[-1]}
         latest_build_version_major_matching_release_array=(${latest_build_version_major_matching_release//\./ })
         latest_build_version_major_matching_minor=${latest_build_version_major_matching_release_array[1]}
