@@ -6,7 +6,8 @@ LABEL com.stackstorm.component="st2actionrunner"
 RUN apt-get install -y rsync \
   inetutils-traceroute \
   net-tools \
-  dnsutils
+  dnsutils \
+  sendmail
 
 USER root
 
