@@ -8,8 +8,8 @@ RUN apt-get install -y rsync \
   net-tools \
   dnsutils \
   sendmail \
-    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
-    && apt-get clean
+  && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
+  && apt-get clean
 
 USER root
 
