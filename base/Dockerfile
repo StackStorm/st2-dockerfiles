@@ -58,7 +58,7 @@ COPY files/st2.user.conf /etc/st2/
 COPY files/st2ctl /etc/default/
 
 # Use custom logging config that'll stream all st2 service logs to stdout and never save to files
-RUN cd /etc/st2; \
+WORKDIR /etc/st2; \
   for file in /etc/st2/logging.*.conf; do \
     rm -f ${file}; \
     ln -s logging.docker.conf ${file}; \
