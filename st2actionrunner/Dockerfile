@@ -7,7 +7,9 @@ RUN apt-get install -y rsync \
   inetutils-traceroute \
   net-tools \
   dnsutils \
-  sendmail
+  sendmail \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
+    && apt-get clean
 
 USER root
 
