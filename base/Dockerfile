@@ -71,7 +71,9 @@ RUN apt-get install -y crudini \
   && crudini --merge /etc/st2/st2.conf < /tmp/st2.tmp.conf \
   && rm -f /tmp/st2.tmp.conf \
   && apt-get purge -y crudini \
-  && apt-get autoremove -y
+  && apt-get autoremove -y \
+  && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
+  && apt-get clean
 
 # Add Custom "StackStorm" welcome message
 COPY files/.welcome.sh /etc/skel/.welcome
