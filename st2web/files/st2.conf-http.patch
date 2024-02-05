@@ -1,22 +1,24 @@
---- st2.conf	2021-06-18 19:45:50.892196136 +0100
-+++ st2.http.conf	2021-06-18 19:50:00.098280995 +0100
-@@ -8,44 +8,18 @@
- 
+--- st2.conf	2023-09-01 16:31:41.000000000 +0100
++++ st2.http.conf	2023-09-01 16:33:45.000000000 +0100
+@@ -7,45 +7,19 @@
+ # see https://docs.stackstorm.com/install.html for details
+
  server {
-   listen *:80 default_server;
+-  listen *:80 default_server;
++  listen *:${ST2_PORT_HTTP} default_server;
 +  server_tokens off;
- 
+
 -  add_header Front-End-Https on;
    add_header X-Content-Type-Options nosniff;
- 
+
 -  if ($ssl_protocol = "") {
 -       return 308 https://$host$request_uri;
 -  }
-   if ($request_method !~ ^(GET|HEAD|POST|PUT|DELETE|OPTIONS)$ ) {
-        return 405;
-   }
-   index  index.html;
- 
+-  if ($request_method !~ ^(GET|HEAD|POST|PUT|DELETE|OPTIONS)$ ) {
+-       return 405;
+-  }
+-  index  index.html;
+-
 -  access_log /var/log/nginx/st2webui.access.log combined;
 -  error_log /var/log/nginx/st2webui.error.log;
 -}
@@ -25,9 +27,9 @@
 -  listen       *:443 ssl;
 -  server_tokens off;
 -
--  if ($request_method !~ ^(GET|HEAD|POST|PUT|DELETE|OPTIONS)$ ) {
--       return 405;
--  }
+   if ($request_method !~ ^(GET|HEAD|POST|PUT|DELETE|OPTIONS)$ ) {
+        return 405;
+   }
 -
 -  ssl_certificate           /etc/ssl/st2/st2.crt;
 -  ssl_certificate_key       /etc/ssl/st2/st2.key;
@@ -37,39 +39,39 @@
 -  ssl_ciphers               EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH:ECDHE-RSA-AES128-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA128:DHE-RSA-AES128-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES128-GCM-SHA128:ECDHE-RSA-AES128-SHA384:ECDHE-RSA-AES128-SHA128:ECDHE-RSA-AES128-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES128-SHA128:DHE-RSA-AES128-SHA128:DHE-RSA-AES128-SHA:DHE-RSA-AES128-SHA:AES128-GCM-SHA384:AES128-GCM-SHA128:AES128-SHA128:AES128-SHA128:AES128-SHA:AES128-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4;
 -  ssl_prefer_server_ciphers on;
 -
--  index  index.html;
--
+   index  index.html;
+
 -  access_log            /var/log/nginx/ssl-st2webui.access.log combined;
 -  error_log             /var/log/nginx/ssl-st2webui.error.log;
 +  access_log /proc/self/fd/1 combined;
 +  error_log stderr;
- 
+
 -  add_header              Front-End-Https on;
    add_header              X-Content-Type-Options nosniff;
    add_header              X-Frame-Options DENY always;
    add_header              Strict-Transport-Security "max-age=3153600;includeSubDomains";
 @@ -61,7 +35,7 @@
- 
+
      rewrite ^/api/(.*)  /$1 break;
- 
+
 -    proxy_pass            http://127.0.0.1:9101/;
 +    proxy_pass            ${ST2_API_URL};
      proxy_read_timeout    90;
      proxy_connect_timeout 90;
      proxy_redirect        off;
 @@ -99,7 +73,7 @@
- 
+
      rewrite ^/stream/(.*)  /$1 break;
- 
+
 -    proxy_pass  http://127.0.0.1:9102/;
 +    proxy_pass  ${ST2_STREAM_URL};
      proxy_set_header Host $host;
      proxy_set_header X-Real-IP $remote_addr;
      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 @@ -138,7 +112,7 @@
- 
+
      rewrite ^/auth/(.*)  /$1 break;
- 
+
 -    proxy_pass            http://127.0.0.1:9100/;
 +    proxy_pass            ${ST2_AUTH_URL};
      proxy_read_timeout    90;
