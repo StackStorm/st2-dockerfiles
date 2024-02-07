@@ -76,7 +76,8 @@ RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
 # It's a user's responsbility to pass the valid SSL certificate files: 'st2.key' and 'st2.crt', used in nginx
 VOLUME ["/etc/ssl/st2/"]
 
-EXPOSE 80
-EXPOSE 443
+EXPOSE 8080
+EXPOSE 8443
 STOPSIGNAL SIGTERM
+RUN touch /var/run/nginx.pid && chown 101:101 /etc/nginx/conf.d/ /var/cache/nginx/ /var/run/nginx.pid
 CMD ["/bin/bash", "-c", "if [ ${ST2WEB_HTTPS} = 1 ]; then ST2WEB_TEMPLATE='/etc/nginx/conf.d/st2-https.template'; else ST2WEB_TEMPLATE='/etc/nginx/conf.d/st2-http.template'; fi && envsubst '${ST2_AUTH_URL} ${ST2_API_URL} ${ST2_STREAM_URL}' < ${ST2WEB_TEMPLATE} > /etc/nginx/conf.d/st2.conf && exec nginx -g 'daemon off;'"]
