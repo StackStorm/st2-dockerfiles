@@ -37,7 +37,7 @@ RUN apt-get -qq update \
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 # Install nginx
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys ABF5BD827BD9BF62 \
+RUN curl https://nginx.org/keys/nginx_signing.key | gpg --dearmor | apt-key add - \
   && echo "deb http://nginx.org/packages/ubuntu/ focal nginx" > /etc/apt/sources.list.d/nginx.list \
   && apt-get update \
   && apt-get install -y nginx \
