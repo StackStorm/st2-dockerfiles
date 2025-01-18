@@ -2,7 +2,7 @@
 [![Circle CI](https://circleci.com/gh/StackStorm/st2-dockerfiles.svg?style=shield)](https://circleci.com/gh/StackStorm/workflows/st2-dockerfiles)
 [![Go to Docker Hub](https://img.shields.io/badge/Docker%20Hub-%E2%86%92-blue.svg)](https://hub.docker.com/r/stackstorm/)
 
-Dockerfiles to build and push StackStorm images to [hub.docker.com/r/stackstorm](https://hub.docker.com/r/stackstorm).  
+Dockerfiles to build and push StackStorm images to [hub.docker.com/r/stackstorm](https://hub.docker.com/r/stackstorm)./ 
 Used by both K8s Helm chart [stackstorm-ha](https://github.com/StackStorm/stackstorm-ha) and docker-compose [st2-docker](https://github.com/StackStorm/st2-docker) deployments.
 
 ## Requirements
