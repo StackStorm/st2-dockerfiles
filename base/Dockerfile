@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ubuntu:focal
+FROM --platform=linux/amd64 ubuntu:jammy
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -34,7 +34,7 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 # Install StackStorm, but without UI
 RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
-    ST2_REPO=unstable; \
+    ST2_REPO=staging-unstable; \
   else \
     ST2_REPO=stable; \
   fi \
