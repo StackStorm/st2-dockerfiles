@@ -1,5 +1,5 @@
 ARG ST2_VERSION
-FROM stackstorm/st2:${ST2_VERSION}
+FROM --platform=linux/amd64 stackstorm/st2:${ST2_VERSION}
 LABEL com.stackstorm.component="st2notifier"
 
 USER st2
