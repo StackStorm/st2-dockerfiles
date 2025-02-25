@@ -1,4 +1,7 @@
-FROM --platform=linux/amd64 ubuntu:jammy
+# Use dynamically set base image
+# Default base image is Ubuntu 22.04 (jammy)
+ARG BASE_IMAGE=ubuntu:jammy
+FROM --platform=linux/amd64 ${BASE_IMAGE}
 
 ARG DEBIAN_FRONTEND=noninteractive
 
