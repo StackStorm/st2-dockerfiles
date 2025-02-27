@@ -1,4 +1,7 @@
-FROM --platform=linux/amd64 ubuntu:focal
+# Use dynamically set base image
+# Default base image is Ubuntu 22.04 (jammy)
+ARG BASE_IMAGE=ubuntu:jammy
+FROM --platform=linux/amd64 ${BASE_IMAGE}
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -38,14 +41,14 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 # Install nginx
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys ABF5BD827BD9BF62 \
-  && echo "deb http://nginx.org/packages/ubuntu/ focal nginx" > /etc/apt/sources.list.d/nginx.list \
+  && echo "deb http://nginx.org/packages/ubuntu/ jammy nginx" > /etc/apt/sources.list.d/nginx.list \
   && apt-get update \
   && apt-get install -y nginx \
   && rm -f /etc/apt/sources.list.d/nginx.list
 
 # Install StackStorm Web UI
 RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
-    ST2_REPO=unstable; \
+    ST2_REPO=staging-unstable; \
   else \
     ST2_REPO=stable; \
   fi \

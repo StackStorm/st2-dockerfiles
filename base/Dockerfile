@@ -1,4 +1,7 @@
-FROM --platform=linux/amd64 ubuntu:focal
+# Use dynamically set base image
+# Default base image is Ubuntu 22.04 (jammy)
+ARG BASE_IMAGE=ubuntu:jammy
+FROM --platform=linux/amd64 ${BASE_IMAGE}
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -34,7 +37,7 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 # Install StackStorm, but without UI
 RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
-    ST2_REPO=unstable; \
+    ST2_REPO=staging-unstable; \
   else \
     ST2_REPO=stable; \
   fi \

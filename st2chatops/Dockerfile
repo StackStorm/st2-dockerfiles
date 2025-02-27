@@ -1,4 +1,7 @@
-FROM --platform=linux/amd64 ubuntu:focal
+# Use dynamically set base image
+# Default base image is Ubuntu 22.04 (jammy)
+ARG BASE_IMAGE=ubuntu:jammy
+FROM --platform=linux/amd64 ${BASE_IMAGE}
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -41,13 +44,13 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 # Install st2chatops
 RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
-    ST2_REPO=unstable; \
+    ST2_REPO=staging-unstable; \
   else \
     ST2_REPO=stable; \
   fi \
   && echo ST2_REPO=${ST2_REPO} \
   && curl -s https://packagecloud.io/install/repositories/StackStorm/${ST2_REPO}/script.deb.sh | bash \
-  && curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+  && curl -sL https://deb.nodesource.com/setup_20.x | bash - \
   && apt-get install -y st2chatops=${ST2_VERSION}-* \
   && rm -f /etc/apt/sources.list.d/nodesource.list \
   && rm -f /etc/apt/sources.list.d/StackStorm_*.list
