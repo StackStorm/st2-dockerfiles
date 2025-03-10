@@ -1,0 +1,112 @@
+version: '3'
+
+services:
+  stackstorm:
+    image: stackstorm/st2/all-in-one-st2:3.5.0-1
+    environment:
+      OS_ACTIONRUNNER__PYTHON_BINARY: /usr/local/bin/python3.7
+    env_file:
+      - conf/stackstorm.env
+      - conf/mongo.env
+      - conf/rabbitmq.env
+      - conf/redis.env
+    ports:
+      - "443:443"
+      - "9100:9100"
+    networks:
+      - mypublic
+      - myprivate
+    volumes:
+      - /run:/run
+      - /sys/fs/cgroup:/sys/fs/cgroup
+      - stackstorm-virtualenvs-volume:/opt/stackstorm/virtualenvs
+      - stackstorm-configs-volume:/opt/stackstorm/configs
+      - ./packs.dev:/opt/stackstorm/packs.dev
+      - ./conf/stackstorm.env:/st2-docker/env
+      - ./conf/rbac/htpasswd:/etc/st2/htpasswd
+      - ./conf/rbac/assignments:/opt/stackstorm/rbac/assignments
+      - ./conf/rbac/roles:/opt/stackstorm/rbac/roles
+      - ./conf/rbac/mappings:/opt/stackstorm/rbac/mappings
+    dns_search: .
+    depends_on:
+      - mongo
+      - rabbitmq
+      - redis
+
+### External Services
+
+  mongo:
+    image: mongo:4.0.23
+    env_file:
+      - conf/mongo.env
+    ports:
+      - "27017:27017"
+    networks:
+      - myprivate
+    volumes:
+      - mongo-volume:/data/db
+      - mongo-configdb-volume:/data/configdb
+    dns_search: .
+    healthcheck:
+        test: echo 'db.stats().ok' | mongo --quiet
+        interval: 5s
+        timeout: 5s
+        retries: 5
+  rabbitmq:
+    image: rabbitmq:3.8.14-management-alpine
+    env_file:
+      - conf/rabbitmq.env
+    networks:
+      - myprivate
+    volumes:
+      - rabbitmq-volume:/var/lib/rabbitmq
+    dns_search: .
+    healthcheck:
+        test:
+          - "CMD"
+          - "rabbitmqctl status"
+        timeout: 5s
+        interval: 5s
+        retries: 5
+  redis:
+    image: redis:4.0
+    env_file:
+      - conf/redis.env
+    networks:
+      - myprivate
+    volumes:
+      - redis-volume:/data
+    ports:
+      - "6379:6379"
+    dns_search: .
+    command: [
+      "bash", "-c",
+      '
+       docker-entrypoint.sh
+       --requirepass "$$REDIS_PASSWORD"
+      '
+    ]
+    healthcheck:
+        test:
+          - "CMD"
+          - "redis-cli PING"
+        timeout: 5s
+        interval: 5s
+        retries: 5
+
+volumes:
+  mongo-volume:
+  mongo-configdb-volume:
+  rabbitmq-volume:
+  redis-volume:
+  stackstorm-packs-volume:
+  stackstorm-virtualenvs-volume:
+  stackstorm-configs-volume:
+
+networks:
+  mypublic:
+    external:
+      name: mypublic
+  myprivate:
+    external:
+      name: myprivate
