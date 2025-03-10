@@ -2,6 +2,9 @@ ARG ST2_VERSION
 FROM --platform=linux/amd64 stackstorm/st2:${ST2_VERSION}
 LABEL com.stackstorm.component="st2auth"
 
+
+RUN apt-get install -y xmlsec1
+
 USER st2
 
 VOLUME ["/etc/st2/keys", "/opt/stackstorm/rbac", "/etc/ssl/certs"]
