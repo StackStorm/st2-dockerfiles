@@ -2,7 +2,6 @@
 
 # Get Ubuntu version
 UBUNTU_VERSION=$(lsb_release -s -d)
-
 VERSIONFILE=$(ls /opt/stackstorm/st2/lib/python*/site-packages/st2common/__init__.py)
 ST2_VERSION=$(/opt/stackstorm/st2/bin/python -c "exec(open('$VERSIONFILE').read()); print(__version__)")
 
