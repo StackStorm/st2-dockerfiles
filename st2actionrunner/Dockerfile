@@ -3,11 +3,14 @@ FROM --platform=linux/amd64 stackstorm/st2:${ST2_VERSION}
 LABEL com.stackstorm.component="st2actionrunner"
 
 # Install utils used by st2 'linux' pack, part of StackStorm core
-RUN apt-get install -y rsync \
-  inetutils-traceroute \
-  net-tools \
-  dnsutils \
-  sendmail
+RUN apt-get -qq update \
+  && apt-get install -y rsync \
+    inetutils-traceroute \
+    net-tools \
+    dnsutils \
+    sendmail \
+  && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
+  && apt-get clean
 
 USER root
 
