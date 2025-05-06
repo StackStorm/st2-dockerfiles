@@ -1,0 +1,6 @@
+---
+  username: "admin"
+  roles:
+  - "admin"
+  - "system_admin"
+  - "observer"
