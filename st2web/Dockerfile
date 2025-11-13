@@ -41,6 +41,8 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 # Install nginx
 RUN curl https://nginx.org/keys/nginx_signing.key | gpg --dearmor > /etc/apt/trusted.gpg.d/nginx-key.gpg \
+  && echo "SEE BELOW TO CHECK THE NGINX GPG SIGNING KEY EXPIRY DATE!" \
+  && gpg --dry-run --quiet --no-keyring --import --import-options import-show /etc/apt/trusted.gpg.d/nginx-key.gpg \
   && echo "deb [signed-by=/etc/apt/trusted.gpg.d/nginx-key.gpg] http://nginx.org/packages/ubuntu/ jammy nginx" > /etc/apt/sources.list.d/nginx.list \
   && apt-get update \
   && apt-get install -y nginx \
