@@ -40,8 +40,8 @@ RUN apt-get -qq update && apt dist-upgrade -y \
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 # Install nginx
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys ABF5BD827BD9BF62 \
-  && echo "deb http://nginx.org/packages/ubuntu/ jammy nginx" > /etc/apt/sources.list.d/nginx.list \
+RUN curl https://nginx.org/keys/nginx_signing.key | gpg --dearmor > /etc/apt/trusted.gpg.d/nginx-key.gpg \
+  && echo "deb [signed-by=/etc/apt/trusted.gpg.d/nginx-key.gpg] http://nginx.org/packages/ubuntu/ jammy nginx" > /etc/apt/sources.list.d/nginx.list \
   && apt-get update \
   && apt-get install -y nginx \
   && rm -f /etc/apt/sources.list.d/nginx.list
