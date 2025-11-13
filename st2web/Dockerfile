@@ -28,7 +28,7 @@ ENV ST2_API_URL http://st2api:9101/
 ENV ST2_STREAM_URL http://st2stream:9102/
 
 # Generate UTF-8 locale
-RUN apt-get -qq update \
+RUN apt-get -qq update && apt dist-upgrade -y \
   && apt-get install -y \
     curl \
     locales \
