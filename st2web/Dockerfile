@@ -46,7 +46,9 @@ RUN curl https://nginx.org/keys/nginx_signing.key | gpg --dearmor > /etc/apt/tru
   && echo "deb [signed-by=/etc/apt/trusted.gpg.d/nginx-key.gpg] http://nginx.org/packages/ubuntu/ jammy nginx" > /etc/apt/sources.list.d/nginx.list \
   && apt-get update \
   && apt-get install -y nginx \
-  && rm -f /etc/apt/sources.list.d/nginx.list
+  && rm -f /etc/apt/sources.list.d/nginx.list \
+  && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
+  && apt-get clean
 
 # Install StackStorm Web UI
 RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
@@ -76,7 +78,9 @@ RUN if [ "${ST2_VERSION#*dev}" != "${ST2_VERSION}" ]; then \
   && rm -f /etc/nginx/conf.d/default.conf \
   && rm -f /tmp/st2.conf.patch \
   && rm -f /tmp/st2.conf-http.patch \
-  && rm -f /tmp/st2.conf-https.patch
+  && rm -f /tmp/st2.conf-https.patch \
+  && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
+  && apt-get clean
 
 # It's a user's responsbility to pass the valid SSL certificate files: 'st2.key' and 'st2.crt', used in nginx
 VOLUME ["/etc/ssl/st2/"]

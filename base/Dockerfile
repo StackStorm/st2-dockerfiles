@@ -61,7 +61,7 @@ COPY files/st2.user.conf /etc/st2/
 COPY files/st2ctl /etc/default/
 
 # Use custom logging config that'll stream all st2 service logs to stdout and never save to files
-RUN cd /etc/st2; \
+WORKDIR /etc/st2; \
   for file in /etc/st2/logging.*.conf; do \
     rm -f ${file}; \
     ln -s logging.docker.conf ${file}; \
@@ -74,7 +74,9 @@ RUN apt-get install -y crudini \
   && crudini --merge /etc/st2/st2.conf < /tmp/st2.tmp.conf \
   && rm -f /tmp/st2.tmp.conf \
   && apt-get purge -y crudini \
-  && apt-get autoremove -y
+  && apt-get autoremove -y \
+  && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
+  && apt-get clean
 
 # Add Custom "StackStorm" welcome message
 COPY files/.welcome.sh /etc/skel/.welcome
