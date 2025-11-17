@@ -26,6 +26,9 @@ ENV ST2WEB_HTTPS 0
 ENV ST2_AUTH_URL http://st2auth:9100/
 ENV ST2_API_URL http://st2api:9101/
 ENV ST2_STREAM_URL http://st2stream:9102/
+ENV ST2_CA_CERT /etc/ssl/internal/ca.crt
+ENV ST2_PORT_HTTP 80
+ENV ST2_PORT_HTTPS 443
 
 # Generate UTF-8 locale
 RUN apt-get -qq update && apt dist-upgrade -y \
@@ -83,5 +86,8 @@ VOLUME ["/etc/ssl/st2/"]
 
 EXPOSE 80
 EXPOSE 443
+EXPOSE 8080
+EXPOSE 8443
 STOPSIGNAL SIGTERM
-CMD ["/bin/bash", "-c", "if [ ${ST2WEB_HTTPS} = 1 ]; then ST2WEB_TEMPLATE='/etc/nginx/conf.d/st2-https.template'; else ST2WEB_TEMPLATE='/etc/nginx/conf.d/st2-http.template'; fi && envsubst '${ST2_AUTH_URL} ${ST2_API_URL} ${ST2_STREAM_URL}' < ${ST2WEB_TEMPLATE} > /etc/nginx/conf.d/st2.conf && exec nginx -g 'daemon off;'"]
+RUN touch /var/run/nginx.pid && chown nginx:nginx /etc/nginx/conf.d/ /var/cache/nginx/ /var/run/nginx.pid
+CMD ["/bin/bash", "-c", "if [ ${ST2WEB_HTTPS} = 1 ]; then ST2WEB_TEMPLATE='/etc/nginx/conf.d/st2-https.template'; else ST2WEB_TEMPLATE='/etc/nginx/conf.d/st2-http.template'; fi && envsubst '${ST2_AUTH_URL} ${ST2_API_URL} ${ST2_STREAM_URL} ${ST2_CERT_CA} ${ST2_PORT_HTTP} ${ST2_PORT_HTTPS}' < ${ST2WEB_TEMPLATE} > /etc/nginx/conf.d/st2.conf && exec nginx -g 'daemon off;'"]
