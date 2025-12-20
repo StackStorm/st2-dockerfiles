@@ -18,3 +18,10 @@ Used by both K8s Helm chart [stackstorm-ha](https://github.com/StackStorm/stacks
 - `make push` - push the Docker images for all the required StackStorm components to the private docker registry.
   The following ENV vars can be passed to control the push:
   - `DOCKER_TAG` (optional, ex: `2.8.0`) - tag pushed to the docker registry, defaults to ST2_VERSION when not set
+
+## Experimental
+Dockerfiles to build and push CentOS/RPM based Stackstorm images
+
+This builds a "all-in-one" container. Services can be started/stopped for each Stackstorm component.
+
+This is initially for review, discussion, and verifying an alternative pathway.
