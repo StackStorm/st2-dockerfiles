@@ -1,4 +1,4 @@
-ST2_VERSION ?= 3.9dev
+ST2_VERSION ?= 3.9.0
 DOCKER_TAG ?= ${ST2_VERSION}
 RELEASE_TAG_REGEX := [^dev]$$
 SHELL := /bin/bash
